@@ -5,12 +5,12 @@
 }
 
 :root {
-    --ink: #1c1917;
-    --paper: #faf6f0;
-    --accent: #d95d39;
-    --accent-dark: #a8442a;
-    --line: #e3d9c9;
-    --text-muted: #6b6459;
+    --ink: #27213A;
+    --paper: #EEF7FC;
+    --accent: #A78BCE;
+    --accent-dark: #7657A6;
+    --line: #D8E2EF;
+    --text-muted: #596579;
     --radius: 4px;
 }
 
@@ -196,4 +196,51 @@ h1, .brand {
     .social-links {
         justify-content: flex-start;
     }
+}
+
+.education{
+    padding: 4.5rem 0 5rem;
+}
+
+.education h2{
+    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-size: 3rem;
+    line-height: 0.95;
+    margin-bottom: 2rem;
+}
+
+.education-list{
+    list-style: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.education-list li {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 2rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--line);
+}
+
+.education-list li:last-child {
+    border-bottom: 1px solid var(--line);
+}
+
+.education-year{
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.education-info h3 {
+    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-size: 1.2rem;
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+}
+
+.education-info p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin: 0.15rem 0;
 }
