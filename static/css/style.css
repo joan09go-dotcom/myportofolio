@@ -4,6 +4,7 @@
     box-sizing: border-box;
 }
 
+/*Color variables*/
 :root {
     --ink: #27213A;
     --paper: #EEF7FC;
@@ -14,6 +15,7 @@
     --radius: 4px;
 }
 
+/*Base*/
 body {
     font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     color: var(--ink);
@@ -31,7 +33,7 @@ h1, .brand {
     padding: 0 1.5rem;
 }
 
-
+/*Header*/
 .site-header {
     border-bottom: 1px solid var(--line);
 }
@@ -61,7 +63,7 @@ h1, .brand {
     font-size: 0.95rem;
 }
 
-
+/*Hero*/
 .hero {
     padding: 4.5rem 0 5rem;
 }
@@ -172,7 +174,7 @@ h1, .brand {
     border: 3px solid var(--ink);
 }
 
-
+/*Education*/
 .education{
     padding: 4.5rem 0 5rem;
 }
@@ -220,10 +222,10 @@ h1, .brand {
     margin: 0.15rem 0;
 }
 
+/*Experience*/
 .experience{
     padding: 4.5rem 0 5rem;
 }
-
 
 .experience h2{
     font-family: "Space Grotesk", -apple-system, sans-serif;
@@ -268,7 +270,7 @@ h1, .brand {
     margin: 0.15rem 0;
 }
 
-
+/*Footer*/
 .site-footer {
     padding: 1.5rem;
     color: var(--text-muted);
@@ -276,6 +278,7 @@ h1, .brand {
     border-top: 1px solid var(--line);
 }
 
+/*Mobile*/
 @media (max-width: 600px) {
     .hero-grid {
         grid-template-columns: 1fr;
