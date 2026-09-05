@@ -173,31 +173,6 @@ h1, .brand {
 }
 
 
-.site-footer {
-    padding: 1.5rem;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    border-top: 1px solid var(--line);
-}
-
-@media (max-width: 600px) {
-    .hero-grid {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "identity"
-            "photo"
-            "details";
-    }
-
-    .hero-photo {
-        max-width: 220px;
-    }
-
-    .social-links {
-        justify-content: flex-start;
-    }
-}
-
 .education{
     padding: 4.5rem 0 5rem;
 }
@@ -243,4 +218,78 @@ h1, .brand {
     color: var(--text-muted);
     font-size: 0.95rem;
     margin: 0.15rem 0;
+}
+
+.experience{
+    padding: 4.5rem 0 5rem;
+}
+
+
+.experience h2{
+    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-size: 3rem;
+    line-height: 0.95;
+    margin-bottom: 2rem;
+}
+
+.experience{
+    list-style: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.experience li {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 2rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--line);
+}
+
+.experience li:last-child {
+    border-bottom: 1px solid var(--line);
+}
+
+.experience-period{
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.experience-info h3 {
+    font-family: "Space Grotesk", -apple-system, sans-serif;
+    font-size: 1.2rem;
+    line-height: 1.2;
+    margin-bottom: 0.4rem;
+}
+
+.experience-info p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin: 0.15rem 0;
+}
+
+
+.site-footer {
+    padding: 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--line);
+}
+
+@media (max-width: 600px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "identity"
+            "photo"
+            "details";
+    }
+
+    .hero-photo {
+        max-width: 220px;
+    }
+
+    .social-links {
+        justify-content: flex-start;
+    }
 }
