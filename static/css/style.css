@@ -234,7 +234,7 @@ h1, .brand {
     margin-bottom: 2rem;
 }
 
-.experience{
+.experience-list{
     list-style: 0;
     padding: 0;
     margin: 0;
@@ -246,6 +246,10 @@ h1, .brand {
     gap: 2rem;
     padding: 1.5rem 0;
     border-top: 1px solid var(--line);
+}
+
+.experience-list li:last-child {
+    border-bottom: 1px solid var(--line);
 }
 
 .experience-period{
