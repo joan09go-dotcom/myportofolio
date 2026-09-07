@@ -187,7 +187,7 @@ h1, .brand {
 }
 
 .education-list{
-    list-style: 0;
+    list-style: none;
     padding: 0;
     margin: 0;
 }
@@ -235,12 +235,12 @@ h1, .brand {
 }
 
 .experience-list{
-    list-style: 0;
+    list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.experience li {
+.experience-list li {
     display: grid;
     grid-template-columns: 140px 1fr;
     gap: 2rem;
