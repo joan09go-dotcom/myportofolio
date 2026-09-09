@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JORDAN - Portfolio</title>
+    <title>{{ name }} - Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -14,11 +14,10 @@
 <body>
     <header class="site-header">
         <div class="container">
-            <a href="#profile" class="brand">Jordan</a>
+            <a href="{% url 'main:show_main' %}" class="brand">{{ name }}</a>
             <nav>
-                <a href="#profile">Profile</a>
-                <a href="#education">Education</a>
-                <a href="#experience">Experience</a>
+                <a href="{% url 'main:show_main' %}">Profile</a>
+                <a href="{% url 'main:show_experience' %}">Experience</a>
             </nav>
         </div>
     </header>
@@ -32,19 +31,18 @@
                 </div>
                 <div class="hero-photo">
                     <div class="photo-block"></div>
-                    <img class="avatar" src="static/img/jordan.jpeg" alt="Photo of Jordan">
+                    <img class="avatar" src="static/img/jordan.jpeg" alt="Photo of {{ name }}">
                 </div>
                 <div class="hero-details">
-                    <p class="bio">Computer Science student at the University of Indonesia with a strong interest in building intelligent and reliable software systems. I enjoy working on projects that combine problem-solving, software development, and emerging AI technologies.
-                                    Driven by curiosity and hands-on experience, I continuously develop my technical skills and look for opportunities to turn ideas into practical solutions.</p>
+                    <p class="bio">{{ bio }}</p>
                     <dl class="meta-list">
                         <div class="meta-row">
                             <dt>NPM</dt>
-                            <dd>2506532580</dd>
+                            <dd>{{ npm }}</dd>
                         </div>
                         <div class="meta-row">
                             <dt>Program</dt>
-                            <dd>S1 Ilmu Komputer</dd>
+                            <dd>{{ study_program }}</dd>
                         </div>
                     </dl>
                     <div class="social-links">
@@ -93,55 +91,11 @@
                 </ul>
             </div>
         </section>   
-
-        <section class="experience" id="experience">
-            <div class="container">
-                <h2>EXPERIENCE</h2>
-                <ul class="experience-list">
-                    <li>
-                        <time class="experience-period">
-                            30 August 2026 — Present
-                        </time>
-                        <div class="experience-info">
-                            <h3>Tech Support</h3>
-                            <h4>GAOTek Inc.</h4>
-                            <p>Manhattan, New York, United States</p>
-                            <p>Remote Intenship</p>
-                        </div>
-                    </li>
-                    <li>
-                        <time class="experience-period">
-                            13 April 2026 — Present
-                        </time>
-                        <div class="experience-info">
-                            <h3>AI Innovation Challenge Staff</h3>
-                            <h4>COMPFEST</h4>
-                            <p>Handling outreach and partnership coordination with speakers, mentors, judges, and industry professionals for the AI Innovation Challenge.</p>
-                            <p>Depok, West Java, Indonesia</p>
-                            <p>Hybrid</p>
-                        </div>
-                    </li>
-                    <li>
-                        <time class="experience-period">
-                            5 January 2026 — 30 January 2026
-                        </time>
-                        <div class="experience-info">
-                            <h3>Junior Software Engineer</h3>
-                            <h4>PT Prasimax Inovasi Teknologi</h4>
-                            <p>Developed a Device Configuration Tool for STM32-based hardware</p>
-                            <p>More details about the project are available on my LinkedIn & Github</p>
-                            <p>Depok, West Java, Indonesia</p>
-                            <p>Hybrid Internship</p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </section>   
     </main>
 
     <footer class="site-footer">
         <div class="container">
-            <p>&copy; 2026 Jordan. Faculty of Computer Science, Universitas Indonesia.</p>
+            <p>&copy; 2026 {{ name }}. Faculty of Computer Science, Universitas Indonesia.</p>
         </div>
     </footer>
 </body>
