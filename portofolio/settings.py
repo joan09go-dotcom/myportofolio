@@ -88,17 +88,18 @@ WSGI_APPLICATION = 'portofolio.wsgi.application'
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 # Database configuration
+# Database configuration
 if PRODUCTION:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('DB_NAME'),
-            'USER': os.getenv('DB_USER'),
-            'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': os.getenv('DB_HOST'),
-            'PORT': os.getenv('DB_PORT'),
+            'NAME': os.getenv('DB_NAME') or os.getenv('DATABASE_NAME') or 'jordan.manaksak',
+            'USER': os.getenv('DB_USER') or os.getenv('DATABASE_USER') or 'jordan.manaksak',
+            'PASSWORD': os.getenv('DB_PASSWORD') or os.getenv('DATABASE_PASSWORD') or 'oyTtLY7N',
+            'HOST': os.getenv('DB_HOST') or os.getenv('DATABASE_HOST') or '10.119.106.139',
+            'PORT': os.getenv('DB_PORT') or os.getenv('DATABASE_PORT') or '5432',
             'OPTIONS': {
-                'options': f"-c search_path={os.getenv('SCHEMA', 'public')}"
+                'options': f"-c search_path={os.getenv('SCHEMA', 'tutorial')}"
             }
         }
     }
