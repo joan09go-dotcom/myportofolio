@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from main.models import Experience
+from main.models import Experience, Education
 
 
 def show_main(request):
