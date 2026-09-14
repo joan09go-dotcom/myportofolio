@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from django.utils import timezone  # 1. Import timezone di atas
 from main.models import Experience, Education
 
 
@@ -17,11 +17,21 @@ def show_main(request):
 
 
 def show_experience(request):
+    experiences = Experience.objects.all()
+    now = timezone.now()
+    
+    for exp in experiences:
+        if exp.ended_at and exp.ended_at > now:
+            exp.status_text = "Sedang Berlangsung"
+        else:
+            exp.status_text = "Selesai"
+
     context = {
         "name": "Jordan Manaksak Hutahaean",
-        "experience_list": Experience.objects.all(),
+        "experience_list": experiences,
     }
     return render(request, "experience.html", context)
+
 
 def show_education(request):
     context = {
