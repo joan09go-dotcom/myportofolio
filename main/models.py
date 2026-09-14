@@ -25,6 +25,10 @@ class Experience(models.Model):
     def is_ongoing(self):
         return self.ended_at is None
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6c58361027c64344d01a6f5574a8ac64d9949b92
 class Education(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     institution = models.CharField(max_length=255)
@@ -41,4 +45,8 @@ class Education(models.Model):
     def year_display(self):
         if self.end_year:
             return f"{self.start_year} — {self.end_year}"
+<<<<<<< HEAD
         return f"{self.start_year} — Present"
+=======
+        return f"{self.start_year} — Present" 
+>>>>>>> 6c58361027c64344d01a6f5574a8ac64d9949b92

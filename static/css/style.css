@@ -6,18 +6,19 @@
 
 /*Color variables*/
 :root {
-    --ink: #27213A;
-    --paper: #EEF7FC;
-    --accent: #A78BCE;
-    --accent-dark: #7657A6;
-    --line: #D8E2EF;
-    --text-muted: #596579;
+    --ink: #e8e8e8;
+    --paper: #050505;
+    --accent: #d90416;
+    --accent-dark: #ff1a2e;
+    --line: #292929;;
+    --text-muted: #999;
+    --card: #0d0d0d;
     --radius: 4px;
 }
 
 /*Base*/
 body {
-    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, "Rajdhani", Roboto, Helvetica, Arial, sans-serif;
     color: var(--ink);
     background-color: var(--paper);
     line-height: 1.6;
@@ -172,6 +173,7 @@ h1, .brand {
     object-position: top center;
     border-radius: var(--radius);
     border: 3px solid var(--ink);
+    
 }
 
 
@@ -212,6 +214,7 @@ h1, .brand {
 
 .section-kicker {
     color: var(--accent-dark);
+    font-family: "Orbitron", sans-serif;
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -220,6 +223,7 @@ h1, .brand {
 
 .experience-section h1 {
     margin: 0.4rem 0 1.5rem;
+    font-family: "Orbitron", sans-serif;
     font-size: 2rem;
 }
 
@@ -231,7 +235,7 @@ h1, .brand {
 
 .experience-card {
     padding: 1.25rem;
-    background-color: #fff;
+    background-color: #0d0d0d;
     border: 1px solid var(--line);
     border-radius: var(--radius);
 }
@@ -279,7 +283,7 @@ h1, .brand {
 
 .education-card {
     padding: 1.25rem;
-    background-color: #fff;
+    background-color: #0d0d0d;
     border: 1px solid var(--line);
     border-radius: var(--radius);
 }

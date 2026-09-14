@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from main.models import Experience
+from main.models import Experience, Education
 
 
 class MainTest(TestCase):
@@ -13,6 +13,15 @@ class MainTest(TestCase):
             category="internship",
         )
 
+        self.education = Education.objects.create(
+            institution="Universitas Indonesia",
+            degree="Bachelor of Computer Science",
+            faculty="Faculty of Computer Science",
+            location="Depok, West Java, Indonesia",
+            start_year=2025,
+            end_year=None,
+        )
+
     def test_main_url_is_accessible(self):
         response = self.client.get(reverse("main:show_main"))
 
@@ -20,6 +29,7 @@ class MainTest(TestCase):
         self.assertTemplateUsed(response, "index.html")
         self.assertNotContains(response, self.experience.title)
         self.assertContains(response, f'href="{reverse("main:show_experience")}"')
+        self.assertContains(response, f'href="{reverse("main:show_education")}"')
 
     def test_nonexistent_page_returns_404(self):
         response = self.client.get("/halaman-yang-tidak-ada/")
@@ -59,3 +69,29 @@ class MainTest(TestCase):
         self.assertFalse(self.experience.is_ongoing)
         self.assertContains(response, "Selesai")
         self.assertNotContains(response, "Sedang berlangsung")
+
+    def test_education_model(self):
+        self.assertEqual(
+            str(self.education),
+            "Universitas Indonesia - Bachelor of Computer Science"
+        )
+        self.assertEqual(self.education.degree, "Bachelor of Computer Science")
+        self.assertEqual(self.education.start_year, 2025)
+
+    def test_education_page(self):
+        response = self.client.get(reverse("main:show_education"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "education.html")
+        self.assertContains(response, self.education.institution)
+        self.assertContains(response, self.education.degree)
+        self.assertContains(response, self.education.faculty)
+        self.assertContains(response, self.education.location)
+        self.assertContains(response, f'href="{reverse("main:show_main")}"')
+
+    def test_empty_education_page(self):
+        Education.objects.all().delete()
+        response = self.client.get(reverse("main:show_education"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Belum ada riwayat pendidikan yang ditambahkan.")
