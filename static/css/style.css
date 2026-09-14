@@ -10,7 +10,7 @@
     --paper: #050505;
     --accent: #d90416;
     --accent-dark: #ff1a2e;
-    --line: #292929;;
+    --line: #292929;
     --text-muted: #999;
     --card: #0d0d0d;
     --radius: 4px;
@@ -173,9 +173,7 @@ h1, .brand {
     object-position: top center;
     border-radius: var(--radius);
     border: 3px solid var(--ink);
-    
 }
-
 
 /*Footer*/
 .site-footer {
@@ -184,7 +182,6 @@ h1, .brand {
     font-size: 0.85rem;
     border-top: 1px solid var(--line);
 }
-
 
 /*Mobile*/
 @media (max-width: 600px) {
@@ -204,7 +201,6 @@ h1, .brand {
         justify-content: flex-start;
     }
 }
-
 
 /*Experience*/
 .experience-section {
@@ -235,9 +231,16 @@ h1, .brand {
 
 .experience-card {
     padding: 1.25rem;
-    background-color: #0d0d0d;
+    background-color: var(--card);
     border: 1px solid var(--line);
     border-radius: var(--radius);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.experience-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--accent);
+    box-shadow: 0 8px 25px rgba(217, 4, 22, 0.4);
 }
 
 .experience-category {
@@ -263,7 +266,6 @@ h1, .brand {
     font-weight: 600;
 }
 
-
 /*Education*/
 .education-section {
     padding: 4rem 0;
@@ -283,9 +285,16 @@ h1, .brand {
 
 .education-card {
     padding: 1.25rem;
-    background-color: #0d0d0d;
+    background-color: var(--card);
     border: 1px solid var(--line);
     border-radius: var(--radius);
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.education-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--accent);
+    box-shadow: 0 8px 25px rgba(217, 4, 22, 0.4);
 }
 
 .education-year {

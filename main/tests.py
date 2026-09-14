@@ -21,6 +21,7 @@ class MainTest(TestCase):
             start_year=2025,
             end_year=None,
         )
+        
 
     def test_main_url_is_accessible(self):
         response = self.client.get(reverse("main:show_main"))
@@ -69,6 +70,7 @@ class MainTest(TestCase):
         self.assertFalse(self.experience.is_ongoing)
         self.assertContains(response, "Selesai")
         self.assertNotContains(response, "Sedang berlangsung")
+
 
     def test_education_model(self):
         self.assertEqual(
