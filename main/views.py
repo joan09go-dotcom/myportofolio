@@ -43,7 +43,14 @@ def create_project(request):
         return redirect("main:show_projects")
 
     context = {
-        "name": "Burhan",
+        "name": "Jordan Manaksak Hutahaean",
         "form": form,
     }
     return render(request, "projects_form.html", context)
+
+def show_projects(request):
+    context = {
+        "name": "Jordan Manaksak Hutahaean",
+        "project_list": Project.objects.all(),
+    }
+    return render(request, "project.html", context)
