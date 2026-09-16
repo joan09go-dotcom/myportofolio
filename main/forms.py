@@ -1,5 +1,4 @@
 from django.forms import ModelForm, TextInput, Textarea, URLInput
-
 from main.models import Project
 
 class ProjectForm(ModelForm):
@@ -24,29 +23,34 @@ class ProjectForm(ModelForm):
         widgets = {
             "title": TextInput(
                 attrs={
+                    "class": "form-control",
                     "placeholder": "Portfolio Website",
                     "maxlength": 255,
                 }
             ),
             "description": Textarea(
                 attrs={
+                    "class": "form-control",
                     "placeholder": "Ceritakan Proyekmu",
                     "rows": 3,
                 }
             ),
             "tech_stack": TextInput(
                 attrs={
+                    "class": "form-control",
                     "placeholder": "Django, Python, HTML, CSS",
                 }
             ),
             "project_url": URLInput(
                 attrs={
-                    "placeholder": "https://github.com/kakBurhan/burhanquestv4",
+                    "class": "form-control",
+                    "placeholder": "https://github.com/...",
                 }
             ),
             "project_image_url": URLInput(
                 attrs={
-                    "placeholder": "https://drive.google.com/thumbnail?id=...&sz=w1000",
+                    "class": "form-control",
+                    "placeholder": "https://drive.google.com/...",
                 }
             ),
         }
