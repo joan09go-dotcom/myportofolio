@@ -8,7 +8,10 @@ from main.models import Experience, Education, Project
 
 from main.forms import ProjectForm
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 def show_main(request):
     context = {
         "name": "Jordan Manaksak Hutahaean",
