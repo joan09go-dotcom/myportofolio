@@ -7,8 +7,6 @@ from main.models import Experience, Education, Project
 
 from main.forms import ProjectForm
 
-
-
 def show_main(request):
     context = {
         "name": "Jordan Manaksak Hutahaean",

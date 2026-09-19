@@ -18,6 +18,10 @@ class Experience(models.Model):
     thumbnail = models.URLField(blank=True, null=True)
     started_at = models.DateTimeField(auto_now_add=True)
     ended_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        ordering = ['-started_at']
+
     def __str__(self):
         return self.title
     
@@ -35,6 +39,9 @@ class Education(models.Model):
     start_year = models.IntegerField()
     end_year = models.IntegerField(null=True, blank=True)
 
+    class Meta:
+        ordering = ['-start_year']
+
     def __str__(self):
         return f"{self.institution} - {self.degree}"
 
@@ -42,6 +49,8 @@ class Education(models.Model):
     def year_display(self):
         if self.end_year:
             return f"{self.start_year} — {self.end_year}"
+        return f"{self.start_year} — Present"
+
 
 class Project(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
