@@ -1,10 +1,36 @@
 {% extends 'base.html' %}
+
+{% block meta %}
+    <title>Education - {{ name }}</title>
+{% endblock meta %}
+
 {% block content %}
 <main>
     <section class="education-section" id="education">
         <div class="container">
             <p class="section-kicker">Perjalanan akademik saya</p>
-            <h1>Education</h1>
+            
+            <div class="project-header">
+                <h1>Education</h1>
+                <a href="{% url 'main:create_education' %}"
+                   class="button project-add-button">
+                    <span aria-hidden="true">+</span>
+                    Tambah Edukasi
+                </a>
+            </div>
+
+            <form method="get"
+                  action="{% url 'main:show_education' %}"
+                  class="project-search">
+                <input type="search"
+                       name="institution"
+                       value="{{ institution_query }}"
+                       placeholder="Cari berdasarkan nama institusi"
+                       class="project-search__input"
+                       aria-label="Cari berdasarkan nama institusi">
+                <button type="submit" class="button">Cari</button>
+            </form>
+
             <div class="education-grid">
                 {% for edu in education_list %}
                     <article class="education-card">
@@ -26,16 +52,26 @@
                         <p class="education-location">
                             {{ edu.location }}
                         </p>
+
+                        <div class="project-card-actions">
+                            <div class="project-actions">
+                                <!-- Penambahan tombol Update Education -->
+                                <a href="{% url 'main:update_education' edu.id %}" class="button button-secondary">Edit</a>
+                                {% include "components/education_delete_modal.html" with education=edu %}
+                            </div>
+                        </div>
                     </article>
                 {% empty %}
-                    <p class="empty-state">
-                        Belum ada riwayat pendidikan yang ditambahkan.
-                    </p>
+                    {% if institution_query %}
+                        <p class="empty-state">Tidak ada riwayat pendidikan dengan nama tersebut.</p>
+                    {% else %}
+                        <p class="empty-state">
+                            Belum ada riwayat pendidikan yang ditambahkan.
+                        </p>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
     </section>
 </main>
 {% endblock content %}
-
-    

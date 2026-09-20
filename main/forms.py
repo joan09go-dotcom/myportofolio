@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TextInput, Textarea, Select, NumberInput, URLInput
+from django.forms import ModelForm, TextInput, Textarea, Select, NumberInput, URLInput, DateTimeInput
 from main.models import Experience, Education, Project
 
 class ExperienceForm(ModelForm):
@@ -9,7 +9,7 @@ class ExperienceForm(ModelForm):
             "description",
             "category",
             "thumbnail",
-            "ended at"
+            "ended_at"
         ]
 
         widgets = {
@@ -32,7 +32,7 @@ class ExperienceForm(ModelForm):
                 "placeholder": "https://example.com/image.png (Opsional)"
             }
             ),
-            "ended_at": TextInput(
+            "ended_at": DateTimeInput(
                 attrs={
                     "class": "form-control", 
                     "type": "datetime-local"

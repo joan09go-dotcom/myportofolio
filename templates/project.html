@@ -15,6 +15,7 @@
                         Tambah Proyek
                     </a>
                 </div>
+
                 <form method="get"
                       action="{% url 'main:show_projects' %}"
                       class="project-search">
@@ -26,6 +27,7 @@
                            aria-label="Cari berdasarkan nama proyek">
                     <button type="submit" class="button">Cari</button>
                 </form>
+
                 <div class="experience-grid project-grid">
                     {% for project in project_list %}
                         <article class="experience-card">
@@ -40,8 +42,11 @@
                             <div class="project-card-actions">
                                 <div class="project-actions">
                                     {% if project.project_url %}
-                                        <a href="{{ project.project_url }}" class="button">Lihat Project</a>
+                                        <a href="{{ project.project_url }}" class="button">Lihat Proyek</a>
                                     {% endif %}
+                                    <!-- Penambahan tombol Update Projects -->
+                                    <a href="{% url 'main:update_projects' project.id %}" class="button button-secondary">Edit</a>
+                                    
                                     {% include "components/project_delete_modal.html" with project=project %}
                                 </div>
                             </div>
