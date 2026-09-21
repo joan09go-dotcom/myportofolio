@@ -16,7 +16,7 @@ class Experience(models.Model):
     description = models.TextField()
     category = models.CharField(max_length=20, choices=EXPERIENCE_CHOICES, default='full-time')
     thumbnail = models.URLField(blank=True, null=True)
-    started_at = models.DateTimeField(auto_now_add=True)
+    started_at = models.DateTimeField()
     ended_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -28,6 +28,10 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+
+    @property
+    def status_display(self):
+        return "Sedang Berlangsung" if self.ended_at is None else "Selesai"
 
 
 class Education(models.Model):
@@ -51,6 +55,10 @@ class Education(models.Model):
             return f"{self.start_year} — {self.end_year}"
         return f"{self.start_year} — Present"
 
+    @property
+    def is_ongoing(self):
+        return self.end_year is None
+
 
 class Project(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -59,8 +67,17 @@ class Project(models.Model):
     tech_stack = models.CharField(max_length=255)
     project_url = models.URLField(blank=True)
     project_image_url = models.URLField(blank=True, max_length=500)
+    
+    started_at = models.DateTimeField(null=True, blank=True)
+    ended_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.title
 
+    @property
+    def is_ongoing(self):
+        return self.ended_at is None
 
+    @property
+    def status_display(self):
+        return "Sedang Berlangsung" if self.ended_at is None else "Selesai"

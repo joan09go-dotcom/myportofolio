@@ -4,16 +4,27 @@
     box-sizing: border-box;
 }
 
-/* Color variables */
 :root {
     --ink: #e8e8e8;
     --paper: #050505;
     --accent: #d90416;
     --accent-dark: #ff1a2e;
     --line: #292929;
-    --text-muted: #999;
+    --text-muted: #999999;
     --card: #0d0d0d;
     --radius: 4px;
+    --glow: rgba(217, 4, 22, 0.4);
+}
+
+[data-theme="jedi"] {
+    --ink: #1a1a1a;                  
+    --paper: #ffffff;                
+    --accent: #008cff;               
+    --accent-dark: #33a3ff;          
+    --line: #e0e0e0;                
+    --text-muted: #666666;           
+    --card: #f5f5f7;                 
+    --glow: rgba(0, 140, 255, 0.4);   
 }
 
 /* Base */
@@ -22,6 +33,7 @@ body {
     color: var(--ink);
     background-color: var(--paper);
     line-height: 1.6;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1, .brand {
@@ -34,9 +46,30 @@ h1, .brand {
     padding: 0 1.5rem;
 }
 
+/* Theme Toggle Button*/
+.theme-toggle-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    font-size: 1.6rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, filter 0.3s ease;
+    filter: drop-shadow(0 0 6px var(--accent));
+}
+
+.theme-toggle-btn:hover {
+    transform: scale(1.2) rotate(10deg);
+}
+
 /* Header */
 .site-header {
     border-bottom: 1px solid var(--line);
+    background-color: var(--paper);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .site-header .container {
@@ -55,6 +88,7 @@ h1, .brand {
 
 .site-header nav {
     display: flex;
+    align-items: center;
     gap: 2rem;
 }
 
@@ -109,6 +143,7 @@ h1, .brand {
 .meta-list {
     display: flex;
     gap: 2rem;
+    flex-wrap: wrap;
     margin-bottom: 1.5rem;
 }
 
@@ -139,11 +174,12 @@ h1, .brand {
     background-color: var(--ink);
     border-radius: var(--radius);
     padding: 0.5rem 1.1rem;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .social-link:hover {
     background-color: var(--accent);
+    color: #ffffff;
 }
 
 .hero-photo {
@@ -161,6 +197,7 @@ h1, .brand {
     background-color: var(--accent);
     border-radius: var(--radius);
     z-index: 0;
+    transition: background-color 0.3s ease;
 }
 
 .avatar {
@@ -207,13 +244,13 @@ h1, .brand {
     background-color: var(--card);
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .experience-card:hover {
     transform: translateY(-8px);
     border-color: var(--accent);
-    box-shadow: 0 8px 25px rgba(217, 4, 22, 0.4);
+    box-shadow: 0 8px 25px var(--glow);
 }
 
 .experience-category {
@@ -261,13 +298,13 @@ h1, .brand {
     background-color: var(--card);
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .education-card:hover {
     transform: translateY(-8px);
     border-color: var(--accent);
-    box-shadow: 0 8px 25px rgba(217, 4, 22, 0.4);
+    box-shadow: 0 8px 25px var(--glow);
 }
 
 .education-year {
@@ -290,7 +327,7 @@ h1, .brand {
     margin-bottom: 0.25rem;
 }
 
-/* Form & Input Styles (Projects) */
+/* Form & Input Styles */
 .project-form {
     width: 100%;
     max-width: 100%;
@@ -319,7 +356,7 @@ h1, .brand {
     border: 1px solid var(--line);
     border-radius: var(--radius);
     font: inherit;
-    transition: border-color 0.2s ease, outline-color 0.2s ease;
+    transition: border-color 0.2s ease, outline-color 0.2s ease, background-color 0.3s ease;
 }
 
 .form-group input:hover,
@@ -348,6 +385,7 @@ h1, .brand {
     margin-top: 0.35rem;
 }
 
+/* Button System */
 .button {
     display: inline-block;
     height: fit-content;
@@ -360,7 +398,7 @@ h1, .brand {
     font: inherit;
     font-weight: 700;
     text-decoration: none;
-    transition: background-color 0.2s ease;
+    transition: all 0.2s ease;
     margin-right: 0.5rem;
 }
 
@@ -378,9 +416,31 @@ h1, .brand {
     background: var(--line);
 }
 
+/* Kustomisasi Khusus Tombol Edit */
+.button-update {
+    background-color: transparent;
+    color: var(--ink);
+    border: 1px solid var(--accent-dark);
+}
 
-/* projects */
+.button-update:hover {
+    background-color: var(--accent-dark);
+    color: #ffffff;
+    box-shadow: 0 0 12px var(--glow);
+}
 
+/* Tombol Hapus / Danger (Dinamis Sesuai Tema) */
+.button-danger {
+    background: var(--accent);
+    color: #ffffff;
+}
+
+.button-danger:hover {
+    background: var(--accent-dark);
+    box-shadow: 0 0 12px var(--glow);
+}
+
+/* Projects */
 .project-header {
     width: 100%;
     display: flex;
@@ -391,7 +451,9 @@ h1, .brand {
 }
 
 .project-grid {
+    display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
 }
 
 .project-grid .experience-card {
@@ -403,7 +465,7 @@ h1, .brand {
     display: block;
     width: 100%;
     height: auto;
-    border: 1px solid black;
+    border: 1px solid var(--line);
     border-radius: var(--radius);
 }
 
@@ -434,9 +496,10 @@ h1, .brand {
     padding: 0.7rem;
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    background: #fff;
+    background: var(--card);
     color: var(--ink);
     font: inherit;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .project-search__input:focus {
@@ -448,7 +511,7 @@ h1, .brand {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px;
     margin-top: 1rem;
 }
 
@@ -471,6 +534,7 @@ h1, .brand {
     margin-top: 0;
 }
 
+/* Modal Delete */
 .project-delete-modal {
     display: none;
     position: fixed;
@@ -499,7 +563,7 @@ h1, .brand {
     height: 100%;
     border: 0;
     padding: 0;
-    background: rgba(28, 25, 23, 0.58);
+    background: rgba(0, 0, 0, 0.75);
     cursor: default;
 }
 
@@ -509,17 +573,16 @@ h1, .brand {
     width: min(100%, 480px);
     padding: 1.5rem;
     background: var(--paper);
+    color: var(--ink);
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    box-shadow: 0 1rem 3rem rgba(28, 25, 23, 0.22);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .project-delete-modal__content h2 {
     margin: 0 0 0.75rem;
-    font-family:
-        "Space Grotesk",
-        -apple-system,
-        sans-serif;
+    font-family: "Space Grotesk", -apple-system, sans-serif;
     font-size: 1.5rem;
 }
 
@@ -543,11 +606,38 @@ h1, .brand {
     margin-top: 1.5rem;
 }
 
-.button-danger {
-    background: #b42318;
+/* Footer */
+.site-footer {
+    padding: 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--line);
+    background-color: var(--paper);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+/* Mobile Media Queries */
 @media (max-width: 600px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "identity"
+            "photo"
+            "details";
+    }
+
+    .hero-photo {
+        max-width: 220px;
+    }
+
+    .social-links {
+        justify-content: flex-start;
+    }
+
+    .project-grid {
+        grid-template-columns: 1fr;
+    }
+
     .project-header {
         align-items: flex-start;
         flex-direction: column;
@@ -584,33 +674,5 @@ h1, .brand {
     .project-delete-modal__actions .button {
         width: 100%;
         text-align: center;
-    }
-}
-
-
-/* Footer */
-.site-footer {
-    padding: 1.5rem;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    border-top: 1px solid var(--line);
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-    .hero-grid {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-            "identity"
-            "photo"
-            "details";
-    }
-
-    .hero-photo {
-        max-width: 220px;
-    }
-
-    .social-links {
-        justify-content: flex-start;
     }
 }

@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TextInput, Textarea, Select, NumberInput, URLInput
+from django.forms import ModelForm, TextInput, Textarea, Select, NumberInput, URLInput, DateTimeInput
 from main.models import Experience, Education, Project
 
 class ExperienceForm(ModelForm):
@@ -9,7 +9,8 @@ class ExperienceForm(ModelForm):
             "description",
             "category",
             "thumbnail",
-            "ended at"
+            "started_at",
+            "ended_at"
         ]
 
         widgets = {
@@ -32,7 +33,13 @@ class ExperienceForm(ModelForm):
                 "placeholder": "https://example.com/image.png (Opsional)"
             }
             ),
-            "ended_at": TextInput(
+            "started_at": DateTimeInput(
+                attrs={
+                    "class": "form-control", 
+                    "type": "datetime-local"
+                }
+            ),
+            "ended_at": DateTimeInput(
                 attrs={
                     "class": "form-control", 
                     "type": "datetime-local"
@@ -101,6 +108,8 @@ class ProjectForm(ModelForm):
             "tech_stack",
             "project_url",
             "project_image_url",
+            "started_at",
+            "ended_at"
         ]
 
         labels = {
@@ -142,6 +151,18 @@ class ProjectForm(ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "https://drive.google.com/...",
+                }
+            ),
+            "started_at": DateTimeInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "datetime-local",
+                }
+            ),
+            "ended_at": DateTimeInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "datetime-local",
                 }
             ),
         }
