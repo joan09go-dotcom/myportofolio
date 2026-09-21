@@ -4,11 +4,7 @@
     box-sizing: border-box;
 }
 
-/* ===================================================
-   COLOR VARIABLES (VADER DARK VS JEDI LIGHT)
-   =================================================== */
 :root {
-    /* Sith / Darth Vader Theme (Default Dark Mode) */
     --ink: #e8e8e8;
     --paper: #050505;
     --accent: #d90416;
@@ -21,15 +17,14 @@
 }
 
 [data-theme="jedi"] {
-    /* Jedi Order Theme (Light Mode) */
-    --ink: #1a1a1a;                  /* Teks utama jadi gelap */
-    --paper: #ffffff;                /* Background utama jadi putih */
-    --accent: #008cff;               /* Aksen biru muda Jedi */
-    --accent-dark: #33a3ff;          /* Aksen biru terang */
-    --line: #e0e0e0;                 /* Border pembatas terang */
-    --text-muted: #666666;           /* Teks sekunder/redup */
-    --card: #f5f5f7;                 /* Card background terang */
-    --glow: rgba(0, 140, 255, 0.4);   /* Glow biru Jedi */
+    --ink: #1a1a1a;                  
+    --paper: #ffffff;                
+    --accent: #008cff;               
+    --accent-dark: #33a3ff;          
+    --line: #e0e0e0;                
+    --text-muted: #666666;           
+    --card: #f5f5f7;                 
+    --glow: rgba(0, 140, 255, 0.4);   
 }
 
 /* Base */
@@ -51,7 +46,7 @@ h1, .brand {
     padding: 0 1.5rem;
 }
 
-/* Theme Toggle Button (Emoji Style) */
+/* Theme Toggle Button*/
 .theme-toggle-btn {
     background: transparent;
     border: none;
@@ -421,7 +416,7 @@ h1, .brand {
     background: var(--line);
 }
 
-/* Kustomisasi Khusus Tombol Update */
+/* Kustomisasi Khusus Tombol Edit */
 .button-update {
     background-color: transparent;
     color: var(--ink);

@@ -68,8 +68,8 @@ class Project(models.Model):
     project_url = models.URLField(blank=True)
     project_image_url = models.URLField(blank=True, max_length=500)
     
-    started_at = models.DateField(null=True, blank=True)
-    ended_at = models.DateField(null=True, blank=True)
+    started_at = models.DateTimeField(null=True, blank=True)
+    ended_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.title

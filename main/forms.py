@@ -9,6 +9,7 @@ class ExperienceForm(ModelForm):
             "description",
             "category",
             "thumbnail",
+            "started_at",
             "ended_at"
         ]
 
@@ -31,6 +32,12 @@ class ExperienceForm(ModelForm):
                 "class": "form-control", 
                 "placeholder": "https://example.com/image.png (Opsional)"
             }
+            ),
+            "started_at": DateTimeInput(
+                attrs={
+                    "class": "form-control", 
+                    "type": "datetime-local"
+                }
             ),
             "ended_at": DateTimeInput(
                 attrs={
@@ -101,6 +108,8 @@ class ProjectForm(ModelForm):
             "tech_stack",
             "project_url",
             "project_image_url",
+            "started_at",
+            "ended_at"
         ]
 
         labels = {
@@ -142,6 +151,18 @@ class ProjectForm(ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "https://drive.google.com/...",
+                }
+            ),
+            "started_at": DateTimeInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "datetime-local",
+                }
+            ),
+            "ended_at": DateTimeInput(
+                attrs={
+                    "class": "form-control",
+                    "type": "datetime-local",
                 }
             ),
         }
