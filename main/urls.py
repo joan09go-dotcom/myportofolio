@@ -4,7 +4,7 @@ from main.views import (
     show_experience, create_experience, update_experience, delete_experience, get_experience_json,
     show_education, create_education, update_education, delete_education, get_education_json,
     show_projects, create_project, update_project, delete_project, get_projects_json,
-    register, login_user, logout_user
+    register, login_user, logout_user, toggle_star
 )
 
 app_name = "main"
@@ -31,9 +31,12 @@ urlpatterns = [
     path("projects/create/", create_project, name="create_project"),
     path("projects/update/<uuid:id>/", update_project, name="update_projects"),
     path("projects/delete/<uuid:project_id>/", delete_project, name="delete_project"),
-    path("projects/json/", get_projects_json, name="get_projects_json"),
+    path("api/projects/", get_projects_json, name="get_projects_json"),
 
     path("register/", register, name="register"),
     path("login/", login_user, name="login"),
     path("logout/", logout_user, name="logout"),
+
+    # Tambahkan path ini ke dalam urlpatterns
+    path("projects/<uuid:project_id>/star/", toggle_star, name="toggle_star",),
 ]

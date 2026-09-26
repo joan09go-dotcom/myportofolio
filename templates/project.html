@@ -9,11 +9,13 @@
                 <p class="section-kicker">Karya yang saya bangun</p>
                 <div class="project-header">
                     <h1>Projects</h1>
-                    <a href="{% url 'main:create_project' %}"
-                       class="button project-add-button">
-                        <span aria-hidden="true">+</span>
-                        Tambah Proyek
-                    </a>
+                    {% if user.is_superuser %}  {# Tambahkan baris ini #}
+                        <a href="{% url 'main:create_project' %}"
+                            class="button project-add-button">
+                            <span aria-hidden="true">+</span>
+                            Tambah Proyek
+                        </a>
+                    {% endif %}                 {# Tambahkan baris ini #}
                 </div>
 
                 <form method="get"
@@ -37,6 +39,7 @@
                                      class="project-image">
                             {% endif %}
                             <h2>{{ project.title }}</h2>
+                            {% include "components/project_star.html" with project=project %}
                             <span class="experience-category">{{ project.tech_stack }}</span>
                             <p class="experience-description">{{ project.description }}</p>
                             <div class="project-status" style="margin: 8px 0;">
@@ -56,9 +59,14 @@
                                         <a href="{{ project.project_url }}" class="button">Lihat Proyek</a>
                                     {% endif %}
                                     <!-- Penambahan tombol Update Projects -->
-                                    <a href="{% url 'main:update_projects' project.id %}" class="button button-secondary">Edit</a>
+                                    {% if user.is_superuser %}
+                                    <a href="{% url 'main:update_projects' project.id %}" 
+                                    class="button button-secondary">
+                                    Edit
+                                    </a>
                                     
                                     {% include "components/project_delete_modal.html" with project=project %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </article>
