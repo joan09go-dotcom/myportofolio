@@ -4,6 +4,9 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from main.models import Experience, Education, Project
 from main.forms import ExperienceForm, EducationForm, ProjectForm
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.shortcuts import redirect, render
 
 # Main
 def show_main(request):
@@ -20,22 +23,32 @@ def show_main(request):
 
 # Experience
 def create_experience(request):
+    # 1. Menyiapkan form sebagai medium penyimpanan data
     form = ExperienceForm(request.POST or None)
 
+    # 2. Cek validasi jika form disubmit
     if request.method == "POST" and form.is_valid():
+        # 3. Simpan ke database jika benar
         form.save()
+        # 4. Tampilkan success message
         messages.success(request, "Pengalaman baru berhasil ditambahkan!")
+        # 5. Balikkan tampilan ke experience.html
         return redirect("main:show_experience")
 
+    # 6. Bungkus data data yang diperlukan 
     context = {
         "name": "Jordan Manaksak Hutahaean",
         "form": form,
     }
+
+    # Render file
     return render(request, "experience_form.html", context)
 
 def update_experience(request, id):
+    # 1. Menyiapkan tempat untuk data khusus yang dituju dengan modal navigasi paramter Models Class name dan id-nya
     experience = get_object_or_404(Experience, id=id)
-    
+
+    # 2. Buat logic yang sama dengan create tapi formnya di specify dengan instance
     if request.method == 'POST':
         form = ExperienceForm(request.POST, instance=experience)
         if form.is_valid():
@@ -216,3 +229,38 @@ def get_projects_json(request):
 
     projects_json = serializers.serialize("json", projects)
     return HttpResponse(projects_json, content_type="application/json")
+
+# Register
+def register(request):
+    form = UserCreationForm(request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        messages.success(request, "Akun berhasil dibuat. Silahkan login.")
+        return redirect("main:login")
+
+    context = {
+        "name" : "Jordan Manaksak Hutahaean",
+        "form" : form,
+    }
+
+    return render(request, "register.html", context)
+
+# Login 
+def login_user(request):
+    form = AuthenticationForm(request, data=request.POST or None)
+
+    if request.method == "POST" and form.is_valid():
+        login(request, form.get_user())
+        return redirect("main:show_main")
+
+    context = {
+        "name": "Burhan",
+        "form": form,
+    }
+    return render(request, "login.html", context)
+
+# Logout
+def logout_user(request):
+    logout(request)
+    return redirect("main:show_main")
