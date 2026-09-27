@@ -248,7 +248,7 @@ def get_projects_json(request):
         projects = projects.filter(title__icontains=title_query) 
  
     projects_json = serializers.serialize("json", projects, use_natural_foreign_keys=True)
-    
+
     return HttpResponse(projects_json, content_type="application/json") 
  
 # Register 
@@ -291,7 +291,7 @@ def logout_user(request):
     response.delete_cookie('last_login') 
     return response
 
-# Tanpa cek is_superuser: semua akun yang sudah login boleh memberi star
+# Fitur star untuk user biasa
 @login_required(login_url="/login/")
 def toggle_star(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
