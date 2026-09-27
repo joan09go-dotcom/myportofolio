@@ -4,7 +4,8 @@ from main.views import (
     show_experience, create_experience, update_experience, delete_experience, get_experience_json,
     show_education, create_education, update_education, delete_education, get_education_json,
     show_projects, create_project, update_project, delete_project, get_projects_json,
-    register, login_user, logout_user, toggle_star
+    register, login_user, logout_user, 
+    toggle_star_for_projects, toggle_star_for_experience, toggle_star_for_education
 )
 
 app_name = "main"
@@ -39,5 +40,7 @@ urlpatterns = [
     path("logout/", logout_user, name="logout"),
 
     # Fitur star
-    path("projects/<uuid:project_id>/star/", toggle_star, name="toggle_star",),
+    path("projects/<uuid:project_id>/star/", toggle_star_for_projects, name="toggle_star_for_projects",),
+    path("experience/<uuid:experience_id>/star/", toggle_star_for_experience, name="toggle_star_for_experience",),
+    path("education/<uuid:education_id>/star/", toggle_star_for_education, name="toggle_star_for_education",)
 ]

@@ -37,6 +37,7 @@
                     {% for experience in experience_list %}
                         <article class="experience-card">
                             <h2>{{ experience.title }}</h2>
+                            {% include "components/experience_star.html" with experience=experience %}
                             <span class="experience-category">{{ experience.get_category_display }}</span>
                             <div class="experience-status" style="margin: 8px 0;">
                                 {% if experience.is_ongoing %}

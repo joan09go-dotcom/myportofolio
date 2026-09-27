@@ -36,6 +36,7 @@
             <div class="education-grid">
                 {% for edu in education_list %}
                     <article class="education-card">
+                        {% include "components/education_star.html" with education=edu %}
                         <span class="education-year">
                             {{ edu.year_display }}
                         </span>

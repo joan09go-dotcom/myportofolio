@@ -10,6 +10,46 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm 
 from django.shortcuts import redirect, render 
 import datetime 
+
+# Register 
+def register(request): 
+    form = UserCreationForm(request.POST or None) 
+ 
+    if request.method == "POST" and form.is_valid(): 
+        form.save() 
+        messages.success(request, "Akun berhasil dibuat. Silahkan login.") 
+        return redirect("main:login") 
+ 
+    context = { 
+        "name" : "Jordan Manaksak Hutahaean", 
+        "form" : form, 
+    } 
+ 
+    return render(request, "register.html", context) 
+ 
+# Login  
+def login_user(request): 
+    form = AuthenticationForm(request, data=request.POST or None) 
+ 
+    if request.method == "POST" and form.is_valid(): 
+        user = form.get_user() 
+        login(request, user) 
+        response = redirect("main:show_main") 
+        response.set_cookie('last_login', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')) 
+        return response 
+ 
+    context = { 
+        "name": "Jordan Manaksak Hutahaean", 
+        "form": form, 
+    } 
+    return render(request, "login.html", context) 
+ 
+# Logout 
+def logout_user(request): 
+    logout(request) 
+    response = redirect("main:show_main") 
+    response.delete_cookie('last_login') 
+    return response
  
 # Main 
 def show_main(request): 
@@ -31,7 +71,7 @@ def show_main(request):
 def create_experience(request): 
    
     if not request.user.is_superuser: 
-            raise PermissionDenied 
+        raise PermissionDenied 
 
     # 1. Menyiapkan form sebagai medium penyimpanan data 
     form = ExperienceForm(request.POST or None) 
@@ -53,8 +93,13 @@ def create_experience(request):
  
     # Render file 
     return render(request, "experience_form.html", context) 
- 
+
+@login_required(login_url="/login/") 
 def update_experience(request, id): 
+
+    if not request.user.is_superuser: 
+        raise PermissionDenied 
+     
     # 1. Menyiapkan tempat untuk data khusus yang dituju dengan modal navigasi paramter Models Class name dan id-nya 
     experience = get_object_or_404(Experience, id=id) 
  
@@ -73,8 +118,13 @@ def update_experience(request, id):
         'name': 'Jordan Manaksak Hutahaean', 
     } 
     return render(request, "update_experience.html", context) 
- 
+
+@login_required(login_url="/login/") 
 def delete_experience(request, id): 
+
+    if not request.user.is_superuser: 
+        raise PermissionDenied 
+    
     experience = get_object_or_404(Experience, pk=id) 
     if request.method == "POST": 
         experience.delete() 
@@ -108,14 +158,30 @@ def get_experience_json(request):
     experience_json = serializers.serialize("json", experiences,use_natural_foreign_keys=True) 
         
     return HttpResponse(experience_json, content_type="application/json") 
+
+# Fitur star experience untuk user biasa
+@login_required(login_url="/login/")
+def toggle_star_for_experience(request, experience_id):
+    experience = get_object_or_404(Experience, pk=experience_id)
+
+    if request.method == "POST":
+        # Kalau akun ini sudah pernah memberi star, batalkan star-nya.
+        # Kalau belum, tambahkan star.
+        if request.user in experience.starred_by.all():
+            experience.starred_by.remove(request.user)
+        else:
+            experience.starred_by.add(request.user)
+            
+
+    return redirect("main:show_experience")
  
  
 # Education 
 @login_required(login_url="/login/") 
 def create_education(request): 
-    
+
     if not request.user.is_superuser: 
-                 raise PermissionDenied 
+        raise PermissionDenied 
      
     form = EducationForm(request.POST or None) 
  
@@ -130,7 +196,12 @@ def create_education(request):
     } 
     return render(request, "education_form.html", context) 
 
+@login_required(login_url="/login/") 
 def update_education(request, id): 
+
+    if not request.user.is_superuser: 
+        raise PermissionDenied 
+     
     education = get_object_or_404(Education, pk=id) 
     form = EducationForm(request.POST or None, instance=education) 
     if request.method == "POST" and form.is_valid(): 
@@ -144,8 +215,13 @@ def update_education(request, id):
         "education": education,   
     } 
     return render(request, "update_education.html", context) 
- 
-def delete_education(request, id): 
+
+@login_required(login_url="/login/") 
+def delete_education(request, id):
+
+    if not request.user.is_superuser: 
+        raise PermissionDenied 
+     
     education = get_object_or_404(Education, pk=id) 
     if request.method == "POST": 
         education.delete() 
@@ -179,6 +255,21 @@ def get_education_json(request):
     educations_json = serializers.serialize("json", educations, use_natural_foreign_keys=True) 
     
     return HttpResponse(educations_json, content_type="application/json") 
+
+# Fitur star education untuk user biasa
+@login_required(login_url="/login/")
+def toggle_star_for_education(request, education_id):
+    educations = get_object_or_404(Education, pk=education_id)
+
+    if request.method == "POST":
+        # Kalau akun ini sudah pernah memberi star, batalkan star-nya.
+        # Kalau belum, tambahkan star.
+        if request.user in educations.starred_by.all():
+            educations.starred_by.remove(request.user)
+        else:
+            educations.starred_by.add(request.user)
+
+    return redirect("main:show_education")
  
  
 # Project 
@@ -262,50 +353,10 @@ def get_projects_json(request):
     projects_json = serializers.serialize("json", projects, use_natural_foreign_keys=True)
 
     return HttpResponse(projects_json, content_type="application/json") 
- 
-# Register 
-def register(request): 
-    form = UserCreationForm(request.POST or None) 
- 
-    if request.method == "POST" and form.is_valid(): 
-        form.save() 
-        messages.success(request, "Akun berhasil dibuat. Silahkan login.") 
-        return redirect("main:login") 
- 
-    context = { 
-        "name" : "Jordan Manaksak Hutahaean", 
-        "form" : form, 
-    } 
- 
-    return render(request, "register.html", context) 
- 
-# Login  
-def login_user(request): 
-    form = AuthenticationForm(request, data=request.POST or None) 
- 
-    if request.method == "POST" and form.is_valid(): 
-        user = form.get_user() 
-        login(request, user) 
-        response = redirect("main:show_main") 
-        response.set_cookie('last_login', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')) 
-        return response 
- 
-    context = { 
-        "name": "Jordan Manaksak Hutahaean", 
-        "form": form, 
-    } 
-    return render(request, "login.html", context) 
- 
-# Logout 
-def logout_user(request): 
-    logout(request) 
-    response = redirect("main:show_main") 
-    response.delete_cookie('last_login') 
-    return response
 
-# Fitur star untuk user biasa
+# Fitur star project untuk user biasa
 @login_required(login_url="/login/")
-def toggle_star(request, project_id):
+def toggle_star_for_projects(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
 
     if request.method == "POST":

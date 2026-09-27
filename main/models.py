@@ -20,6 +20,8 @@ class Experience(models.Model):
     started_at = models.DateTimeField()
     ended_at = models.DateTimeField(blank=True, null=True)
 
+    starred_by = models.ManyToManyField(User, related_name="starred_experience", blank=True)
+
     class Meta:
         ordering = ['-started_at']
 
@@ -43,6 +45,8 @@ class Education(models.Model):
     location = models.CharField(max_length=255)
     start_year = models.IntegerField()
     end_year = models.IntegerField(null=True, blank=True)
+
+    starred_by = models.ManyToManyField(User, related_name="starred_education", blank=True)
 
     class Meta:
         ordering = ['-start_year']
@@ -68,7 +72,6 @@ class Project(models.Model):
     tech_stack = models.CharField(max_length=255)
     project_url = models.URLField(blank=True)
     project_image_url = models.URLField(blank=True, max_length=500)
-    
     started_at = models.DateTimeField(null=True, blank=True)
     ended_at = models.DateTimeField(null=True, blank=True)
 
