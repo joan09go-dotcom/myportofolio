@@ -27,7 +27,12 @@ def show_main(request):
     return render(request, "index.html", context) 
  
 # Experience 
+@login_required(login_url="/login/") 
 def create_experience(request): 
+   
+    if not request.user.is_superuser: 
+            raise PermissionDenied 
+
     # 1. Menyiapkan form sebagai medium penyimpanan data 
     form = ExperienceForm(request.POST or None) 
  
@@ -100,12 +105,18 @@ def get_experience_json(request):
     if title_query: 
         experiences = experiences.filter(title__icontains=title_query) 
  
-    experience_json = serializers.serialize("json", experiences) 
+    experience_json = serializers.serialize("json", experiences,use_natural_foreign_keys=True) 
+        
     return HttpResponse(experience_json, content_type="application/json") 
  
  
 # Education 
+@login_required(login_url="/login/") 
 def create_education(request): 
+    
+    if not request.user.is_superuser: 
+                 raise PermissionDenied 
+     
     form = EducationForm(request.POST or None) 
  
     if request.method == "POST" and form.is_valid(): 
@@ -165,7 +176,8 @@ def get_education_json(request):
     if institution_query: 
         educations = educations.filter(institution__icontains=institution_query) 
  
-    educations_json = serializers.serialize("json", educations) 
+    educations_json = serializers.serialize("json", educations, use_natural_foreign_keys=True) 
+    
     return HttpResponse(educations_json, content_type="application/json") 
  
  

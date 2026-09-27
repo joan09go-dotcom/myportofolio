@@ -9,14 +9,16 @@
     <section class="education-section" id="education">
         <div class="container">
             <p class="section-kicker">Perjalanan akademik saya</p>
-            
+             
             <div class="project-header">
                 <h1>Education</h1>
-                <a href="{% url 'main:create_education' %}"
-                   class="button project-add-button">
-                    <span aria-hidden="true">+</span>
-                    Tambah Edukasi
-                </a>
+                {% if user.is_superuser %}
+                    <a href="{% url 'main:create_education' %}"
+                    class="button project-add-button">
+                        <span aria-hidden="true">+</span>
+                        Tambah Edukasi
+                    </a>
+                {% endif %}
             </div>
 
             <form method="get"
@@ -54,11 +56,16 @@
                         </p>
 
                         <div class="project-card-actions">
-                            <div class="project-actions">
-                                <!-- Penambahan tombol Update Education -->
-                                <a href="{% url 'main:update_education' edu.id %}" class="button button-secondary">Edit</a>
-                                {% include "components/education_delete_modal.html" with education=edu %}
-                            </div>
+                            {% if user.is_superuser %}
+                                <div class="project-actions">
+                                    <!-- Penambahan tombol Update Education -->
+                                    <a href="{% url 'main:update_education' edu.id %}" 
+                                        class="button button-secondary">
+                                        Edit
+                                    </a>
+                                    {% include "components/education_delete_modal.html" with education=edu %}
+                                </div>
+                            {% endif %}
                         </div>
                     </article>
                 {% empty %}

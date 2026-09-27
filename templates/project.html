@@ -7,6 +7,7 @@
         <section class="experience-section" id="experience">
             <div class="container">
                 <p class="section-kicker">Karya yang saya bangun</p>
+
                 <div class="project-header">
                     <h1>Projects</h1>
                     {% if user.is_superuser %}  {# Tambahkan baris ini #}
@@ -60,12 +61,11 @@
                                     {% endif %}
                                     <!-- Penambahan tombol Update Projects -->
                                     {% if user.is_superuser %}
-                                    <a href="{% url 'main:update_projects' project.id %}" 
-                                    class="button button-secondary">
-                                    Edit
-                                    </a>
-                                    
-                                    {% include "components/project_delete_modal.html" with project=project %}
+                                        <a href="{% url 'main:update_projects' project.id %}" 
+                                            class="button button-secondary">
+                                            Edit
+                                        </a>
+                                        {% include "components/project_delete_modal.html" with project=project %}
                                     {% endif %}
                                 </div>
                             </div>
