@@ -1,5 +1,5 @@
-from django.contrib.auth.decorators import login_required, permission_required  # Tambahkan baris ini 
-from django.core.exceptions import PermissionDenied        # Tambahkan baris ini
+from django.contrib.auth.decorators import login_required, permission_required   
+from django.core.exceptions import PermissionDenied        
 from django.contrib import messages 
 from django.core import serializers 
 from django.http import HttpResponse 

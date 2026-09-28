@@ -10,13 +10,13 @@
 
                 <div class="project-header">
                     <h1>Projects</h1>
-                    {% if user.is_superuser %}  {# Tambahkan baris ini #}
+                    {% if user.is_superuser %}  
                         <a href="{% url 'main:create_project' %}"
                             class="button project-add-button">
                             <span aria-hidden="true">+</span>
                             Tambah Proyek
                         </a>
-                    {% endif %}                 {# Tambahkan baris ini #}
+                    {% endif %}                 
                 </div>
 
                 <form method="get"
