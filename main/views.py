@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required  # Tambahkan baris ini 
+from django.contrib.auth.decorators import login_required, permission_required  # Tambahkan baris ini 
 from django.core.exceptions import PermissionDenied        # Tambahkan baris ini
 from django.contrib import messages 
 from django.core import serializers 
@@ -94,11 +94,9 @@ def create_experience(request):
     # Render file 
     return render(request, "experience_form.html", context) 
 
+@permission_required("main.change_experience", raise_exception=True)
 @login_required(login_url="/login/") 
 def update_experience(request, id): 
-
-    if not request.user.is_superuser: 
-        raise PermissionDenied 
      
     # 1. Menyiapkan tempat untuk data khusus yang dituju dengan modal navigasi paramter Models Class name dan id-nya 
     experience = get_object_or_404(Experience, id=id) 
@@ -145,6 +143,7 @@ def show_experience(request):
         "name": "Jordan Manaksak Hutahaean", 
         "experience_list": experiences, 
         "title_query": title_query, 
+        "is_editor": is_editor(request.user),
     } 
     return render(request, "experience.html", context) 
  
@@ -171,7 +170,7 @@ def toggle_star_for_experience(request, experience_id):
             experience.starred_by.remove(request.user)
         else:
             experience.starred_by.add(request.user)
-            
+
 
     return redirect("main:show_experience")
  
@@ -196,12 +195,10 @@ def create_education(request):
     } 
     return render(request, "education_form.html", context) 
 
+@permission_required("main.change_education", raise_exception=True)
 @login_required(login_url="/login/") 
 def update_education(request, id): 
 
-    if not request.user.is_superuser: 
-        raise PermissionDenied 
-     
     education = get_object_or_404(Education, pk=id) 
     form = EducationForm(request.POST or None, instance=education) 
     if request.method == "POST" and form.is_valid(): 
@@ -293,10 +290,8 @@ def create_project(request):
     return render(request, "projects_form.html", context) 
 
 @login_required(login_url="/login/")  
+@permission_required("main.change_project", raise_exception=True)
 def update_project(request, id): 
-
-    if not request.user.is_superuser: 
-            raise PermissionDenied 
     
     project = get_object_or_404(Project, pk=id) 
     form = ProjectForm(request.POST or None, instance=project) 
@@ -340,6 +335,7 @@ def show_projects(request):
         "name": "Jordan Manaksak Hutahaean", 
         "project_list": projects, 
         "title_query": title_query, 
+        "is_editor": is_editor(request.user),
     } 
     return render(request, "project.html", context) 
  
@@ -368,3 +364,6 @@ def toggle_star_for_projects(request, project_id):
             project.starred_by.add(request.user)
 
     return redirect("main:show_projects")
+
+def is_editor(user):
+    return user.is_authenticated and user.groups.filter(name="Editor").exists()
