@@ -10,6 +10,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm 
 from django.shortcuts import redirect, render 
 import datetime 
+from django.http import JsonResponse
 
 # Register 
 def register(request): 
@@ -322,20 +323,11 @@ def delete_project(request, project_id):
     return redirect("main:show_projects") 
  
 def show_projects(request): 
-    json_response = get_projects_json(request) 
- 
-    projects = serializers.deserialize( 
-        "json", 
-        json_response.content.decode("utf-8"), 
-    ) 
-    projects = [project.object for project in projects] 
     title_query = request.GET.get("title", "").strip() 
  
     context = { 
         "name": "Jordan Manaksak Hutahaean", 
-        "project_list": projects, 
         "title_query": title_query, 
-        "is_editor": is_editor(request.user),
     } 
     return render(request, "project.html", context) 
  
@@ -346,9 +338,27 @@ def get_projects_json(request):
     if title_query: 
         projects = projects.filter(title__icontains=title_query) 
  
-    projects_json = serializers.serialize("json", projects, use_natural_foreign_keys=True)
+    data = []
+    for project in projects:
+        starred_users = project.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
 
-    return HttpResponse(projects_json, content_type="application/json") 
+        data.append({
+            "pk": str(project.id),
+            "fields": {
+                "title": project.title,
+                "description": project.description,
+                "tech_stack": project.tech_stack,
+                "project_url": project.project_url,
+                "project_image_url": project.project_image_url,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names,
+            }
+        })
+
+    return JsonResponse(data, safe=False)
 
 # Fitur star project untuk user biasa
 @login_required(login_url="/login/")
