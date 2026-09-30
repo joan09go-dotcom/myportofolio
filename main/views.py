@@ -12,6 +12,7 @@ from django.shortcuts import redirect, render
 import datetime 
 from django.http import JsonResponse
 from main.forms import ProjectForm
+from django.views.decorators.http import require_POST
 
 
 # Register 
