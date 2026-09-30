@@ -11,6 +11,8 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import redirect, render 
 import datetime 
 from django.http import JsonResponse
+from main.forms import ProjectForm
+
 
 # Register 
 def register(request): 
@@ -328,6 +330,7 @@ def show_projects(request):
     context = { 
         "name": "Jordan Manaksak Hutahaean", 
         "title_query": title_query, 
+        "form": ProjectForm(),
     } 
     return render(request, "project.html", context) 
  
@@ -377,3 +380,21 @@ def toggle_star_for_projects(request, project_id):
 
 def is_editor(user):
     return user.is_authenticated and user.groups.filter(name="Editor").exists()
+
+@require_POST
+def create_project_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan proyek."},
+            status=403,
+        )
+
+    form = ProjectForm(request.POST)
+    if form.is_valid():
+        project = form.save()
+        return JsonResponse(
+            {"message": "Proyek berhasil ditambahkan.", "pk": str(project.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)

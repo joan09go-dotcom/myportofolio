@@ -14,11 +14,12 @@
                     </button>
                     <h1>Projects</h1>
                     {% if user.is_superuser %}  
-                        <a href="{% url 'main:create_project' %}"
-                            class="button project-add-button">
+                        <button type="button"
+                            class="button project-add-button"
+                            popovertarget="add-project-modal">
                             <span aria-hidden="true">+</span>
                             Tambah Proyek
-                        </a>
+                        </button>
                     {% endif %}                 
                 </div>
 
@@ -76,7 +77,10 @@
         </section>
     </main>
 
-    
+    {% if user.is_superuser %}
+        {% include "components/project_form_modal.html" %}
+    {% endif %}
+
     <script>
     const SEARCH_DEBOUNCE_DELAY = 300;
     let searchDebounceTimer;
@@ -120,7 +124,7 @@
         // Dummy UUID digunakan untuk digantikan oleh ID asli dari data JSON
         const deleteUrl = "{% url 'main:delete_project' '00000000-0000-0000-0000-000000000000' %}"
             .replace('00000000-0000-0000-0000-000000000000', projectId);
-        const starUrl = "{% url 'main:toggle_star' '00000000-0000-0000-0000-000000000000' %}"
+        const starUrl = "{% url 'main:toggle_star_for_projects' '00000000-0000-0000-0000-000000000000' %}"
             .replace('00000000-0000-0000-0000-000000000000', projectId);
 
         const deleteHtml = IS_SUPERUSER 
@@ -219,6 +223,10 @@
         clearTimeout(searchDebounceTimer);
         searchProjects();
     });
+
+    function closeProjectModal() {
+        document.getElementById("add-project-modal").hidePopover();
+    }
 
     // Start application
     fetchProjects(searchInput.value.trim());
