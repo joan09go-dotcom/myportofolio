@@ -13,11 +13,12 @@
             <div class="project-header">
                 <h1>Education</h1>
                 {% if user.is_superuser %}
-                    <a href="{% url 'main:create_education' %}"
-                    class="button project-add-button">
-                        <span aria-hidden="true">+</span>
-                        Tambah Edukasi
-                    </a>
+                     <button type="button"
+                                class="button project-add-button"
+                                popovertarget="add-project-modal">
+                            <span aria-hidden="true">+</span>
+                            Tambah Riwayat Pendidikan
+                    </button>
                 {% endif %}
             </div>
 
@@ -53,6 +54,10 @@
         </div>
     </section>
 </main>
+
+{% if user.is_superuser %}
+    {% include "components/education_form_modal.html" %}
+{% endif %}
 
 <script>
 
@@ -222,6 +227,10 @@
         // Ambil input search lalu jalankan AJAX
         searchExperiences();
     });
+
+    function closeProjectModal() {
+        document.getElementById("add-education-modal").hidePopover();
+    }
 
     // Start application
     fetchEducations(searchInput.value.trim());

@@ -11,7 +11,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import redirect, render 
 import datetime 
 from django.http import JsonResponse
-from main.forms import ProjectForm
+from main.forms import ProjectForm, ExperienceForm, EducationForm
 from django.views.decorators.http import require_POST
 
 
@@ -140,6 +140,8 @@ def show_experience(request):
     context = { 
         "name": "Jordan Manaksak Hutahaean", 
         "title_query" : title_query,
+        # Masukin form untuk kebutuhan Tambah Pengalaman
+        "form" : ExperienceForm(),
     } 
     return render(request, "experience.html", context) 
  
@@ -248,7 +250,9 @@ def show_education(request):
     institution_query = request.GET.get("institution", "").strip() 
     context = { 
         "name": "Jordan Manaksak Hutahaean", 
-        "institution_query": institution_query, 
+        "institution_query": institution_query,
+        # Masukin form untuk kebutuhan Tambah Riwayat Pendidikan
+        "form" : EducationForm(),
     } 
     return render(request, "education.html", context) 
  
