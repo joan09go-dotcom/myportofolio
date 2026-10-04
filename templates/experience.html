@@ -21,9 +21,7 @@
                     {% endif %}  
                 </div>
 
-                <form method="get"
-                      action="{% url 'main:show_experience' %}"
-                      class="project-search">
+                <form id="experience-search-form" class="project-search">
                     <input type="search"
                            name="title"
                            value="{{ title_query }}"
@@ -32,50 +30,313 @@
                            aria-label="Cari berdasarkan judul pengalaman">
                     <button type="submit" class="button">Cari</button>
                 </form>
-
-                <div class="experience-grid project-grid">
-                    {% for experience in experience_list %}
-                        <article class="experience-card">
-                            <h2>{{ experience.title }}</h2>
-                            {% include "components/experience_star.html" with experience=experience %}
-                            <span class="experience-category">{{ experience.get_category_display }}</span>
-                            <div class="experience-status" style="margin: 8px 0;">
-                                {% if experience.is_ongoing %}
-                                    <span class="badge" style="background-color: #28a745; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">
-                                        Sedang Berlangsung
-                                    </span>
-                                {% else %}
-                                    <span class="badge" style="background-color: #6c757d; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">
-                                        Selesai
-                                    </span>
-                                {% endif %}
-                            </div>
-                            <p class="experience-description">{{ experience.description }}</p>
-                            
-                            <div class="project-card-actions">
-                                {% if perms.main.change_experience %}
-                                <div class="project-actions">
-                                        <!-- Penambahan tombol Update Experience -->
-                                    <a href="{% url 'main:update_experience' experience.id %}" 
-                                        class="button button-secondary">
-                                        Edit
-                                    </a>
-                                {% endif %}    
-                                {% if user.is_superuser %}
-                                    {% include "components/experience_delete_modal.html" with experience=experience %}
-                                {% endif %}
-                                </div>
-                            </div>
-                        </article>
-                    {% empty %}
-                        {% if title_query %}
-                            <p class="empty-state">Tidak ada pengalaman dengan judul tersebut.</p>
-                        {% else %}
-                            <p class="empty-state">Belum ada pengalaman yang ditambahkan.</p>
-                        {% endif %}
-                    {% endfor %}
+                    <!-- Loading State -->
+                <div id="loading" class="empty-state hide">
+                    <p>Memuat experiences...</p>
                 </div>
+
+                <!-- Error State -->
+                <div id="error" class="empty-state hide">
+                    <p>Gagal memuat data experiences. Silakan coba lagi.</p>
+                </div>
+
+                <!-- Empty State -->
+                <div id="empty" class="empty-state hide">
+                    <p>Belum ada pengalaman yang ditambahkan atau ditemukan.</p>
+                </div>
+
+                <!-- Experience Grid -->
+                <div id="grid" class="experience-grid project-grid hide"></div>
             </div>
         </section>
     </main>
+
+    <script>
+    let searchDebounceTimer
+    const SEARCH_DEBOUNCE_DELAY = 300
+
+    // Konfigurasi
+    const BASE_EXPERIENCES_ENDPOINT = "{% url 'main:get_experiences_json' %}";
+    const IS_SUPERUSER = "{{ user.is_superuser|yesno:'true,false' }}" === "true";
+    let experiencesAbortController;
+
+
+    // =========================
+    // Elemen DOM
+    // =========================
+    const loadingState = document.getElementById('loading');
+    const errorState = document.getElementById('error');
+    const emptyState = document.getElementById('empty');
+    const gridContainer = document.getElementById('experience-list');
+    const searchForm = document.getElementById('experience-search-form');
+    const searchInput = document.getElementById('experience-search-input');
+
+
+    // =========================
+    // Menyembunyikan/Menampilkan
+    // section halaman
+    // =========================
+    function displayPageSection({
+        showLoading = false,
+        showError = false,
+        showEmpty = false,
+        showGrid = false
+    }) {
+        loadingState.classList.toggle('hide', !showLoading);
+        errorState.classList.toggle('hide', !showError);
+        emptyState.classList.toggle('hide', !showEmpty);
+        gridContainer.classList.toggle('hide', !showGrid);
+    }
+
+
+    // =========================
+    // Membuat elemen card Experience
+    // =========================
+    function buildExperienceCardElement(item) {
+        const experience = item.fields;
+        const experienceId = item.pk;
+
+        const articleElement = document.createElement('article');
+        articleElement.className = 'experience-card';
+
+
+        // Thumbnail
+        const imageHtml = experience.thumbnail
+            ? `<img src="${experience.thumbnail}"
+                    alt="Gambar ${experience.title}"
+                    class="experience-image">`
+            : '';
+
+
+        // URL delete
+        const deleteUrl = "{% url 'main:delete_experience' '00000000-0000-0000-0000-000000000000' %}"
+            .replace(
+                '00000000-0000-0000-0000-000000000000',
+                experienceId
+            );
+
+
+        // URL star
+        const starUrl = "{% url 'main:toggle_star_experience' '00000000-0000-0000-0000-000000000000' %}"
+            .replace(
+                '00000000-0000-0000-0000-000000000000',
+                experienceId
+            );
+
+
+        // Tombol delete hanya untuk superuser
+        const deleteHtml = IS_SUPERUSER
+            ? `<form method="post"
+                    action="${deleteUrl}"
+                    style="display:inline;">
+
+                    {% csrf_token %}
+
+                    <button type="submit"
+                            class="button button-danger"
+                            onclick="return confirm('Yakin ingin menghapus experience ini?');">
+                        Hapus
+                    </button>
+
+                </form>`
+            : '';
+
+
+        // Status star
+        const isStarredClass = experience.is_starred
+            ? " is-starred"
+            : "";
+
+        const starText = experience.is_starred
+            ? "Unstar"
+            : "Star";
+
+        const starTitle = experience.star_count > 0
+            ? `Dibintangi oleh ${experience.starred_by_names}`
+            : "Jadilah yang pertama memberi star";
+
+
+        // Komponen card
+        const completeCardHtml = `
+            ${imageHtml}
+
+            <h2>${experience.title}</h2>
+
+            <span class="experience-category">
+                ${experience.category}
+            </span>
+
+            <p class="experience-description">
+                ${experience.description}
+            </p>
+
+            <span class="experience-status">
+                ${experience.status_display}
+            </span>
+
+            <div class="project-card-actions">
+                <div class="project-actions">
+
+                    <form method="post"
+                        action="${starUrl}"
+                        class="star-form">
+
+                        {% csrf_token %}
+
+                        <button type="submit"
+                                class="button button-star${isStarredClass}"
+                                title="${starTitle}">
+
+                            <span aria-hidden="true">★</span>
+
+                            ${starText}
+
+                            <span class="star-count">
+                                ${experience.star_count}
+                            </span>
+
+                        </button>
+
+                    </form>
+
+                    ${deleteHtml}
+
+                </div>
+            </div>
+        `;
+
+
+        articleElement.innerHTML = completeCardHtml;
+
+        return articleElement;
+    }
+
+
+    // =========================
+    // Fetch data Experience
+    // =========================
+    async function fetchExperiences(searchQuery = "") {
+
+        // Membatalkan request sebelumnya
+        if (experiencesAbortController) {
+            experiencesAbortController.abort();
+        }
+
+        experiencesAbortController = new AbortController();
+
+        try {
+
+            displayPageSection({
+                showLoading: true
+            });
+
+
+            // Membuat URL endpoint
+            const url = searchQuery
+                ? `${BASE_EXPERIENCES_ENDPOINT}?title=${encodeURIComponent(searchQuery)}`
+                : BASE_EXPERIENCES_ENDPOINT;
+
+
+            // Request AJAX
+            const response = await fetch(url, {
+                headers: {
+                    'Accept': 'application/json'
+                },
+                signal: experiencesAbortController.signal,
+            });
+
+
+            // Cek apakah request berhasil
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+
+
+            // Mengubah response menjadi JSON
+            const experienceData = await response.json();
+
+
+            // Jika tidak ada data
+            if (experienceData.length === 0) {
+
+                displayPageSection({
+                    showEmpty: true
+                });
+
+            } else {
+
+                // Kosongkan card lama
+                gridContainer.innerHTML = '';
+
+
+                // Buat card untuk setiap data
+                experienceData.forEach(item => {
+
+                    gridContainer.appendChild(
+                        buildExperienceCardElement(item)
+                    );
+
+                });
+
+
+                // Tampilkan grid
+                displayPageSection({
+                    showGrid: true
+                });
+            }
+
+        } catch (error) {
+
+            // Request yang dibatalkan bukan error yang perlu ditampilkan
+            if (error.name === 'AbortError') {
+                return;
+            }
+
+
+            console.error(
+                'Error loading experiences:',
+                error
+            );
+
+
+            displayPageSection({
+                showError: true
+            });
+        }
+    }
+
+    
+    // Event Handler Form Search
+    function searchExperiences(){
+        fetchExperiences(searchInput.value.trim());
+    }
+
+    searchInput.addEventListener('input', function() {
+
+       // 2. clearTimeout ketika input dimasukkan sebelum durasi SEARCH_DEBOUNCE_DELAY habis
+       clearTimeout(searchDebounceTimer);
+
+      // 1. Jalanin dlu fungsi searchExperiences setelah SEARCH_DEBOUNCE_DELAY
+    searchDebounceTimer = setTimeout(function(){searchExperiences();}, SEARCH_DEBOUNCE_DELAY);
+    });
+
+    searchForm.addEventListener('submit', function(event) {
+
+        // Mencegah reload halaman
+        event.preventDefault();
+
+        clearTimeout(searchDebounceTimer);
+
+        // Ambil input search
+        // lalu jalankan AJAX
+        searchExperiences();
+    });
+
+
+   
+    // Start application
+    fetchExperiences(
+        searchInput.value.trim()
+    );
+</script>
 {% endblock content %}

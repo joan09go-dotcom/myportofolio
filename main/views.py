@@ -136,18 +136,10 @@ def delete_experience(request, id):
     return redirect("main:show_experience") 
  
 def show_experience(request): 
-    json_response = get_experience_json(request) 
-    experiences = serializers.deserialize( 
-        "json", json_response.content.decode("utf-8") 
-    ) 
-    experiences = [exp.object for exp in experiences] 
     title_query = request.GET.get("title", "").strip() 
- 
     context = { 
         "name": "Jordan Manaksak Hutahaean", 
-        "experience_list": experiences, 
-        "title_query": title_query, 
-        "is_editor": is_editor(request.user),
+        "title_query" : title_query,
     } 
     return render(request, "experience.html", context) 
  
@@ -158,10 +150,29 @@ def get_experience_json(request):
     if title_query: 
         experiences = experiences.filter(title__icontains=title_query) 
  
-    experience_json = serializers.serialize("json", experiences,use_natural_foreign_keys=True) 
-        
-    return HttpResponse(experience_json, content_type="application/json") 
+    experience_data = []
+    for experience in experiences :
+        starred_users = experience.starred_by.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
 
+        experience_data.append({
+            "pk" : str(experience.id),
+            "fields" : {
+                "title" : experience.title,
+                "description" : experience.description,
+                "category" : experience.category,
+                "thumbnail" : experience.thumbnail,
+                "started_at" : experience.started_at,
+                "ended_at" : experience.ended_at,
+                "is_ongoing": experience.is_ongoing,
+                "status_display": experience.status_display,
+                "star_count" : starred_users.count(),
+                "is_starrred" : is_starred     
+            }
+        })
+
+        return JsonResponse(eperience_data, safe=False)
+    
 # Fitur star experience untuk user biasa
 @login_required(login_url="/login/")
 def toggle_star_for_experience(request, experience_id):
@@ -230,18 +241,13 @@ def delete_education(request, id):
         return redirect("main:show_education") 
  
     return redirect("main:show_education") 
- 
+
+# show_education saat ini hanya bertugas merender education.html tanpa memikirkan pengambilan data dari data base
+# Karena sesuai instruksi, pengambilan data  json ini dilakukan oleh javascript melalui fetch ke endpoint json
 def show_education(request): 
-    json_response = get_education_json(request) 
-    educations = serializers.deserialize( 
-        "json", json_response.content.decode("utf-8") 
-    ) 
-    educations = [edu.object for edu in educations] 
     institution_query = request.GET.get("institution", "").strip() 
- 
     context = { 
         "name": "Jordan Manaksak Hutahaean", 
-        "education_list": educations, 
         "institution_query": institution_query, 
     } 
     return render(request, "education.html", context) 
@@ -252,10 +258,33 @@ def get_education_json(request):
  
     if institution_query: 
         educations = educations.filter(institution__icontains=institution_query) 
- 
-    educations_json = serializers.serialize("json", educations, use_natural_foreign_keys=True) 
-    
-    return HttpResponse(educations_json, content_type="application/json") 
+
+    education_data = []
+    for education in educations:
+        # 1. Ambil semua user yang pernah memberi star pada section education ini
+        starred_users = education.starred_by.all()
+        # 2. Cek apakah user yang sedang login sudah memberi star
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        
+        education_data.append({
+            "pk": str(education.id),
+            "fields": {
+                "institution": education.institution,
+                "degree": education.degree,
+                "faculty": education.faculty,
+                "location": education.location,
+                "start_year": education.start_year,
+                "end_year": education.end_year,
+                # isi data jumlah star berdasarkan jumlah user yg udh kasih star
+                "star_count": starred_users.count(),
+                "is_starred": is_starred
+            }
+        })
+
+        # safe=False karena kita ingin mengirim data dalam bentuk list bukan dictionary
+        # kalau datanya dictionary safe=True
+        return JsonResponse (education_data, safe=False)
+
 
 # Fitur star education untuk user biasa
 @login_required(login_url="/login/")
@@ -342,13 +371,13 @@ def get_projects_json(request):
     if title_query: 
         projects = projects.filter(title__icontains=title_query) 
  
-    data = []
+    project_data = []
     for project in projects:
         starred_users = project.starred_by.all()
         is_starred = request.user in starred_users if request.user.is_authenticated else False
         starred_by_names = ", ".join([u.username for u in starred_users])
 
-        data.append({
+        project_data.append({
             "pk": str(project.id),
             "fields": {
                 "title": project.title,
@@ -362,7 +391,7 @@ def get_projects_json(request):
             }
         })
 
-    return JsonResponse(data, safe=False)
+    return JsonResponse(project_data, safe=False)
 
 # Fitur star project untuk user biasa
 @login_required(login_url="/login/")
