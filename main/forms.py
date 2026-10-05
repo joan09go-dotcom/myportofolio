@@ -49,6 +49,15 @@ class ExperienceForm(ModelForm):
             ),
         }
 
+        def clean_title(self):
+                title = strip_tags(self.cleaned_data["title"]).strip()
+                if not title:
+                    raise ValidationError("Nama pengalaman tidak boleh hanya berisi tag HTML.")
+                return title
+    
+        def clean_description(self):
+            return strip_tags(self.cleaned_data["description"]).strip()
+
 class EducationForm(ModelForm):
     class Meta:
         model = Education
@@ -100,6 +109,24 @@ class EducationForm(ModelForm):
             ),
             
         }
+
+        def clean_institution(self):
+                title = strip_tags(self.cleaned_data["institution"]).strip()
+                if not title:
+                    raise ValidationError("Nama riwayat pendidikan tidak boleh hanya berisi tag HTML.")
+                return title
+
+        def clean_degree(self):
+            return strip_tags(self.cleaned_data["degree"]).strip()
+
+        def clean_faculty(self):
+            return strip_tags(self.cleaned_data["faculty"]).strip()
+
+        def clean_location(self):
+            location = strip_tags(self.cleaned_data["location"]).strip()
+            if not location:
+                raise ValidationError("Lokasi institusi tidak boleh hanya berisi tag HTML.")
+            return location
 
 class ProjectForm(ModelForm):
     class Meta:

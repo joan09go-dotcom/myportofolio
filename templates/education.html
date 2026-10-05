@@ -136,24 +136,27 @@
 
         // Komponen card
         const completeCardHtml = `
-            <span class="education-year">${escapeHtml(education.start_year)} - ${education.end_year ?? 'Sekarang'}</span>
+            <span class="education-year">${escapeHtml(education.start_year)} - ${ 
+                education.end_year !== null
+                    ? escapeHtml(education.end_year)
+                    : 'Sekarang'}</span>
 
-            <h2>${education.institution}</h2>
+            <h2>${escapeHtml(education.institution)}</h2>
 
             ${
                 education.degree
-                    ? `<p class="education-degree">${education.degree}</p>`
+                    ? `<p class="education-degree">${escapeHtml(education.degree)}</p>`
                     : ''
             }
 
             ${
-                education.faculty
-                    ? `<p class="education-faculty">${education.faculty}</p>`
+                    education.faculty
+                    ? `<p class="education-faculty">${escapeHtml(education.faculty)}</p>`
                     : ''
             }
 
             <p class="education-location">
-                ${education.location}
+                ${escapeHtml(education.location)}
             </p>
 
             <div class="project-card-actions">
@@ -176,7 +179,7 @@
                             ${starText}
 
                             <span class="star-count">
-                                ${education.star_count}
+                                ${escapeHtml(education.star_count)}
                             </span>
                         </button>
                     </form>
