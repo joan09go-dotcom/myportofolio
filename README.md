@@ -10,7 +10,7 @@
 
 ---
 
-## Instruksi Setup Mingguan
+**## Instruksi Setup Mingguan**
 
 * Membuat *Branch* Git Baru untuk tugas baru di minggu tertentu agar dokumentasi kode lebih terfokus.
 * Mengaktifkan Virtual Environment sebelum menjalankan proyek.
@@ -219,3 +219,48 @@ Fungsi get_project_json() pertama-tama menerima *request* dari *client* untuk me
 ## AI Disclosure Tugas 3
 
 ### Saya menggunakan ChatGPT untuk membuatkan roadmap pengerjaan tugas 3 sehingga pengerjaannya dapat dilakukan secara terstruktur, memahami bagian-bagian yang dirasa kurang mengerti di petunjuk tutorial dalam pengerjaan tugas 3, melakukan cek kesalahan sintaks atau penulisan kode yang saya tulis, merapikan struktur kode sehingga readable dan rapi, serta terakhir merapikan format penulisan README agar terasa rapi dalam box untuk dibaca (Chat AI: https://chatgpt.com/share/6ab1517b-5ba4-83ec-94ae-4907a4682c9d)
+
+---
+
+## Pertanyaan Reflektif Tugas 5
+
+### 1.
+
+* Debouncing adalah metode untuk menunda execution suatu function sampai user benar-benar berhenti melakukan aktivitas dalam periode waktu tertentu
+* Penggunaan metode/teknik ini penting untuk reduce jumlah request yang dilakukan secara berulang per ketikan masukan input (jika misalnya diambil dari contoh konteks input) sehingga dapat mengurangi beban server serta membuat fitur pencarian menjadi lebih efisien
+
+### 2.
+
+*fetch()* merupakan function asynchronous yang menghasilkan Promise. Promise sederhananya adalah objek yang menunjukkan bahwa hasilnya akan tersedia setelah proses selesai. *await* disini berperan untuk menunggu Promise sampai selesai sehingga hasilnya akan dapat digunakan. Pada *fetch()*, *await* menunggu sampai response dari server diterima. Jika tidak pakai *await*, variabel yang dipakai untuk menyimpan *fetch()* tentunya akan masih berisi Promise, bukan hasil response atau data yang sebenarnya. Akibatnya, output tersebut tidak bisa langsung diolah.
+
+### 3.
+
+XSS adalah serangan yang memasukkan kode JavaScript berbahaya ke dalam sebuah web sehingga kode tersebut dapat dijalankan di browser user asli. AJAX/JavaScript lebih rentan jika data langsung dimasukkan ke HTML tanpa pengamanan sehingga untuk mengamankan-nya perlu dilakukan escaping. Sedangkan pada template Django, data biasanya otomatis di-escape, sehingga kode berbahaya tidak bisa langsung dijalankan .
+
+---
+
+## Progress Tugas 5
+
+### 30 September
+
+* Menambahkan fitur notifikasi Toast.
+* Menerapkan AJAX dan debouncing pada fitur pencarian proyek.
+* Membuat modal sebagai form untuk menambahkan proyek.
+* Menambahkan fitur penambahan proyek menggunakan AJAX melalui modal form.
+* Menerapkan proteksi XSS pada sisi klien dan server.
+
+### 5 Oktober
+
+* Menampilkan data dengan AJAX pada section Experience dan Education.
+* Mengubah sistem pencarian menjadi sistem debouncing
+* Membuat modal sebagai form untuk menambahkan Experience dan Education.
+* Menambahkan data Experience dan Education menggunakan AJAX.
+* Melakukan perlindungan terhadap section Experience dan Education dari serangan XSS.
+* Memperbaiki indentasi pada function cleaning di section Experience dan Education.
+* Menambah section README dengan jawaban pertanyaan reflektif Tugas 5, progres Tugas 5, dan AI Dislosure Tugas 5
+
+---
+
+## AI Disclosure Tugas 5
+
+### Saya menggunakan ChatGPT untuk membuatkan roadmap pengerjaan tugas 5 sehingga pengerjaannya dapat dilakukan secara terstruktur, memahami fungsi tiap bagian checkpoint yang diminta, membantu membuka cara berpikir terhadap instruksi yang diberi di tiap checkpoint, melakukan cek kesalahan sintaks atau penulisan kode yang saya tulis, serta merapikan struktur kode sehingga readable dan rapi (Chat AI: https://chatgpt.com/c/6ac16add-4600-83ec-b178-7d4de45956c6)
