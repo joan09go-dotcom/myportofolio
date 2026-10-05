@@ -119,6 +119,7 @@ def update_experience(request, id):
         'experience': experience,   
         'name': 'Jordan Manaksak Hutahaean', 
     } 
+
     return render(request, "update_experience.html", context) 
 
 @login_required(login_url="/login/") 
@@ -134,19 +135,24 @@ def delete_experience(request, id):
         return redirect("main:show_experience") 
  
     return redirect("main:show_experience") 
- 
+
+# show_education saat ini hanya bertugas merender education.html tanpa memikirkan pengambilan data dari database
+# Karena sesuai instruksi, pengambilan data  json ini dilakukan oleh javascript melalui fetch dari database melalui endpoint json
 def show_experience(request): 
     title_query = request.GET.get("title", "").strip() 
+
     context = { 
         "name": "Jordan Manaksak Hutahaean", 
         "title_query" : title_query,
         # Masukin form untuk kebutuhan Tambah Pengalaman
         "form" : ExperienceForm(),
     } 
+
     return render(request, "experience.html", context) 
  
 def get_experience_json(request): 
     title_query = request.GET.get("title", "").strip() 
+
     experiences = Experience.objects.all() 
  
     if title_query: 
@@ -154,9 +160,14 @@ def get_experience_json(request):
  
     experience_data = []
     for experience in experiences :
+        # 1. Ambil semua user yang pernah memberi star pada card experience ini
         starred_users = experience.starred_by.all()
-        is_starred = request.user in starred_users if request.user.is_authenticated else False
 
+        # 2. Cek apakah user yang sedang login sudah memberi star
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
+
+        # 3. isi experience_data dengan data-data sesuai field-field yang tersedia pada models
         experience_data.append({
             "pk" : str(experience.id),
             "fields" : {
@@ -169,11 +180,14 @@ def get_experience_json(request):
                 "is_ongoing": experience.is_ongoing,
                 "status_display": experience.status_display,
                 "star_count" : starred_users.count(),
-                "is_starrred" : is_starred     
+                "is_starred" : is_starred,
+                "starred_by_names": starred_by_names,     
             }
         })
 
-        return JsonResponse(eperience_data, safe=False)
+    # safe=False karena kita ingin mengirim data dalam bentuk list bukan dictionary
+    # kalau datanya dictionary safe=True
+    return JsonResponse(experience_data, safe=False)
     
 # Fitur star experience untuk user biasa
 @login_required(login_url="/login/")
@@ -181,13 +195,13 @@ def toggle_star_for_experience(request, experience_id):
     experience = get_object_or_404(Experience, pk=experience_id)
 
     if request.method == "POST":
+
         # Kalau akun ini sudah pernah memberi star, batalkan star-nya.
         # Kalau belum, tambahkan star.
         if request.user in experience.starred_by.all():
             experience.starred_by.remove(request.user)
         else:
             experience.starred_by.add(request.user)
-
 
     return redirect("main:show_experience")
  
@@ -210,6 +224,7 @@ def create_education(request):
         "name": "Jordan Manaksak Hutahaean", 
         "form": form, 
     } 
+
     return render(request, "education_form.html", context) 
 
 @permission_required("main.change_education", raise_exception=True)
@@ -244,14 +259,11 @@ def delete_education(request, id):
  
     return redirect("main:show_education") 
 
-# show_education saat ini hanya bertugas merender education.html tanpa memikirkan pengambilan data dari data base
-# Karena sesuai instruksi, pengambilan data  json ini dilakukan oleh javascript melalui fetch ke endpoint json
 def show_education(request): 
     institution_query = request.GET.get("institution", "").strip() 
     context = { 
         "name": "Jordan Manaksak Hutahaean", 
         "institution_query": institution_query,
-        # Masukin form untuk kebutuhan Tambah Riwayat Pendidikan
         "form" : EducationForm(),
     } 
     return render(request, "education.html", context) 
@@ -265,10 +277,9 @@ def get_education_json(request):
 
     education_data = []
     for education in educations:
-        # 1. Ambil semua user yang pernah memberi star pada section education ini
         starred_users = education.starred_by.all()
-        # 2. Cek apakah user yang sedang login sudah memberi star
         is_starred = request.user in starred_users if request.user.is_authenticated else False
+        starred_by_names = ", ".join([u.username for u in starred_users])
         
         education_data.append({
             "pk": str(education.id),
@@ -279,15 +290,14 @@ def get_education_json(request):
                 "location": education.location,
                 "start_year": education.start_year,
                 "end_year": education.end_year,
-                # isi data jumlah star berdasarkan jumlah user yg udh kasih star
+                "is_ongoing": education.is_ongoing,
+                "year_display": education.year_display,
                 "star_count": starred_users.count(),
-                "is_starred": is_starred
+                "is_starred": is_starred,
+                "starred_by_names": starred_by_names
             }
         })
-
-        # safe=False karena kita ingin mengirim data dalam bentuk list bukan dictionary
-        # kalau datanya dictionary safe=True
-        return JsonResponse (education_data, safe=False)
+    return JsonResponse (education_data, safe=False)
 
 
 # Fitur star education untuk user biasa
@@ -296,8 +306,7 @@ def toggle_star_for_education(request, education_id):
     educations = get_object_or_404(Education, pk=education_id)
 
     if request.method == "POST":
-        # Kalau akun ini sudah pernah memberi star, batalkan star-nya.
-        # Kalau belum, tambahkan star.
+
         if request.user in educations.starred_by.all():
             educations.starred_by.remove(request.user)
         else:
@@ -403,8 +412,7 @@ def toggle_star_for_projects(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
 
     if request.method == "POST":
-        # Kalau akun ini sudah pernah memberi star, batalkan star-nya.
-        # Kalau belum, tambahkan star.
+       
         if request.user in project.starred_by.all():
             project.starred_by.remove(request.user)
         else:
@@ -428,6 +436,42 @@ def create_project_ajax(request):
         project = form.save()
         return JsonResponse(
             {"message": "Proyek berhasil ditambahkan.", "pk": str(project.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+@require_POST
+def create_education_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan riwayat pendidikan."},
+            status=403,
+        )
+
+    form = EducationForm(request.POST)
+    if form.is_valid():
+        education = form.save()
+        return JsonResponse(
+            {"message": "Riwayat pendidikan berhasil ditambahkan.", "pk": str(education.id)},
+            status=201,
+        )
+
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+
+@require_POST
+def create_experience_ajax(request):
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan pengalaman."},
+            status=403,
+        )
+
+    form = ExperienceForm(request.POST)
+    if form.is_valid():
+        experience = form.save()
+        return JsonResponse(
+            {"message": "Pengalaman berhasil ditambahkan.", "pk": str(experience.id)},
             status=201,
         )
 

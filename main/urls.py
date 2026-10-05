@@ -1,8 +1,8 @@
 from django.urls import path
 from main.views import (
     show_main,
-    show_experience, create_experience, update_experience, delete_experience, get_experience_json,
-    show_education, create_education, update_education, delete_education, get_education_json,
+    show_experience, create_experience, create_experience_ajax, update_experience, delete_experience, get_experience_json,
+    show_education, create_education, create_education_ajax, update_education, delete_education, get_education_json,
     show_projects, create_project, create_project_ajax, update_project, delete_project, get_projects_json,
     register, login_user, logout_user, 
     toggle_star_for_projects, toggle_star_for_experience, toggle_star_for_education
@@ -44,5 +44,7 @@ urlpatterns = [
     path("experience/<uuid:experience_id>/star/", toggle_star_for_experience, name="toggle_star_for_experience",),
     path("education/<uuid:education_id>/star/", toggle_star_for_education, name="toggle_star_for_education",),
 
-    path("projects/add-ajax/", create_project_ajax, name="create_project_ajax")
+    path("projects/add-ajax/", create_project_ajax, name="create_project_ajax"),
+    path("educations/add-ajax/", create_education_ajax, name="create_education_ajax"),
+    path("experiences/add-ajax/", create_experience_ajax, name="create_experience_ajax"),
 ]
