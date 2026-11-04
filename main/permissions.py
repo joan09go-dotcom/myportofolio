@@ -9,3 +9,5 @@ class IsPortfolioOwnerOrReadOnly(BasePermission):
             request.method in SAFE_METHODS
             or request.user.is_superuser
         )
+
+    
