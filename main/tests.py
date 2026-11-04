@@ -1,9 +1,9 @@
+from datetime import date
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
 from main.models import Experience, Education
-
 
 class MainTest(TestCase):
     def setUp(self):
@@ -11,6 +11,7 @@ class MainTest(TestCase):
             title="Junior Software Engineer at PT Prasimax Inovasi Teknologi",
             description="Developed a Device Configuration Tool for STM32-based hardware",
             category="internship",
+            started_at=timezone.now(),
         )
 
         self.education = Education.objects.create(

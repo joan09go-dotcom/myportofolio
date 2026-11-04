@@ -15,6 +15,7 @@ from main.forms import ProjectForm, ExperienceForm, EducationForm
 from django.views.decorators.http import require_POST
 
 
+
 # Register 
 def register(request): 
     form = UserCreationForm(request.POST or None) 
@@ -476,3 +477,4 @@ def create_experience_ajax(request):
         )
 
     return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
+

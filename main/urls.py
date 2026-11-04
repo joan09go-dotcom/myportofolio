@@ -1,4 +1,5 @@
 from django.urls import path
+
 from main.views import (
     show_main,
     show_experience, create_experience, create_experience_ajax, update_experience, delete_experience, get_experience_json,
@@ -47,4 +48,5 @@ urlpatterns = [
     path("projects/add-ajax/", create_project_ajax, name="create_project_ajax"),
     path("educations/add-ajax/", create_education_ajax, name="create_education_ajax"),
     path("experiences/add-ajax/", create_experience_ajax, name="create_experience_ajax"),
+
 ]
