@@ -264,3 +264,49 @@ XSS adalah serangan yang memasukkan kode JavaScript berbahaya ke dalam sebuah we
 ## AI Disclosure Tugas 5
 
 ### Saya menggunakan ChatGPT untuk membuatkan roadmap pengerjaan tugas 5 sehingga pengerjaannya dapat dilakukan secara terstruktur, memahami fungsi tiap bagian checkpoint yang diminta, membantu membuka cara berpikir terhadap instruksi yang diberi di tiap checkpoint, melakukan cek kesalahan sintaks atau penulisan kode yang saya tulis, serta merapikan struktur kode sehingga readable dan rapi (Chat AI: https://chatgpt.com/c/6ac16add-4600-83ec-b178-7d4de45956c6)
+
+---
+
+## Pertanyaan Reflektif Tugas 6
+
+### 1.
+
+REST adalah standar arsitektur software yang mendeskripsikan uniform interface antara komponen-komponen yang terpisah secara fisik dalam arsitektur Client-Server. Karakteristik utamanya meliputi stateless (server tidak menyimpan state klien antar transaksi), cacheable, dan terpisah secara client-server. Mengembalikan JSON saja belum cukup untuk menyebut sebuah API sebagai RESTful karena berdasarkan Richardson Maturity Model, sebuah API tidak cukup hanya berada di Level 0 atau sekadar mengembalikan JSON. API baru bisa disebut RESTful jika menerapkan Level 1 (penggunaan Resource URL yang spesifik) dan Level 2 (memanfaatkan standar HTTP Verbs seperti GET, POST, PUT, DELETE). Idealnya, API matang di Level 3 juga menerapkan HATEOAS (Hypermedia As The Engine Of Application State), di mana respons API menyertakan hyperlinks yang memandu klien ke langkah atau aksi valid berikutnya. PUT digunakan untuk pembaruan atau penggantian resource secara keseluruhan sedangkan PATCH digunakan untuk pembaruan sebagian (partial update) dari suatu resource.
+
+### 2.
+
+Serializer bertindak sebagai jembatan dua arah dimana Serialization berfungsi menerjemahkan objek model Django ORM dan QuerySet yang kompleks ke dalam tipe data primitif Python (dictionaries, lists) agar dapat dirender menjadi format JSON sedangkan Deserialization berfungsi untuk mem-parsing data JSON yang masuk dari request body, memvalidasinya, dan mengubahnya kembali menjadi dictionary Python melalui method .save(). Keuntungannya dibandingkan merakit dictionary secara manual dengan JsonResponse adalah DRF otomatis mendeteksi struktur model Django, tipe data, hingga aturan validasi dasarnya tanpa kita harus repot-repot menyusun dictionary Python satu per satu secara manual, kemudian di DRF, kita hanya cukup panggil .is_valid(), dan sistem bakal otomatis memvalidasi data atau langsung menolak jika tidak sesuai.
+
+### 3.
+
+Autentikasi adalah mengenali siapa pihak yang membuat request (mengidentifikasi identitas pengguna dan mengisi request.user). Otorisasi adalah untuk menentukan apakah pengguna yang sudah terautentikasi tersebut memiliki hak akses untuk melihat, mengubah, atau menghapus resource yang diminta. Hak akses wajib diperiksa dengan permission class di server karena jika sebatas menyembunyikan tombol di frontend, penyerang tetap dapat mem-bypass antarmuka visual dan mengirimkan HTTP request berbahaya secara langsung ke endpoint API backend menggunakan alat pihak ketiga.
+
+### 4.
+
+SessionAuthentication menggunakan kerangka sesi bawaan Django dan cookie browser. Karena browser secara otomatis memakaikan cookie ini ke setiap cross-origin request, aplikasi rentan terhadap serangan CSRF. DRF mewajibkan validasi token CSRF pada unsafe methods (POST, PUT, PATCH, DELETE) agar klien AJAX wajib mengambil cookie csrftoken dan menyertakannya di dalam header HTTP X-CSRFToken.
+Method force_authenticate bekerja dengan cara mem-bypass layer autentikasi HTTP secara langsung di dalam memori Python (menyuntikkan objek pengguna langsung ke dalam request) tanpa melalui siklus penanganan middleware session dan pemeriksaan cookie browser yang asli. Untuk membuktikan perlindungan CSRF berfungsi dengan benar, pengujian harus menggunakan APIClient(enforce_csrf_checks=True) disertai proses autentikasi nyata yang mensimulasikan pengiriman cookie dan header X-CSRFToken secara utuh.
+
+---
+
+## Progress Tugas 6
+
+### 8 November
+
+* Membuat kelas ExperienceSerializer dan EducationSerializer
+* Menentukan field secara eksplisit tanpa menggunakan __all__ demi keamanan dan kejelasan struktur data.* * Menambahkan field komputasi star secara read-only (star_count, is_starred, starred_by_names) serta menerapkan fungsi strip_tags untuk mencegah celah keamanan XSS pada data teks yang masuk.
+* Mengonversi views menjadi API berbasis fungsi menggunakan dekorator @api_view.   
+* Menerapkan fungsi operasi CRUD (Create, Read, Update, Delete) secara asinkronus.  
+* Mengintegrasikan kelas IsPortfolioOwnerOrEditorOrReadOnly serta membatasi endpoint star hanya untuk pengguna yang terautentikasi (IsAuthenticated)
+* Mendaftarkan dan mengonfigurasi rute URL agar endpoint dapat diakses secara bersih.
+
+### 9 November
+
+* Melakukan pengujian unit di dalam tests_api.py.
+* Menguji seluruh peran pengguna (pengunjung, pengguna biasa, editor, dan superuser/owner).
+* Melakukan verifikasi penolakan data beserta validasi input, serta memastikan mekanisme proteksi CSRF berjalan aman
+
+---
+
+## AI Disclosure Tugas 6
+
+### Saya menggunakan Gemini untuk membuatkan roadmap pengerjaan tugas 6 sehingga pengerjaannya dapat dilakukan secara terstruktur, memahami fungsi tiap bagian checkpoint yang diminta, membantu membuka cara berpikir terhadap instruksi yang diberi di tiap checkpoint. (Chat AI: https://share.gemini.google/dPVKwI0cEQAN)
