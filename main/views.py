@@ -57,19 +57,8 @@ def logout_user(request):
     return response
  
 # Main 
-def show_main(request): 
-    last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan') 
-    context = { 
-        "name": "Jordan Manaksak Hutahaean", 
-        "npm": "2506532580", 
-        "study_program": "S1 Ilmu Komputer", 
-        "bio": ( 
-            "Computer Science student at the University of Indonesia with a strong interest in building intelligent and reliable software systems. I enjoy working on projects that combine problem-solving, software development, and emerging AI technologies. " 
-            "Driven by curiosity and hands-on experience, I continuously develop my technical skills and look for opportunities to turn ideas into practical solutions." 
-        ), 
-        "last_login" : last_login, 
-    } 
-    return render(request, "index.html", context) 
+def show_main(request):
+    return render(request, 'index.html')
  
 # Experience 
 @login_required(login_url="/login/") 
@@ -139,17 +128,9 @@ def delete_experience(request, id):
 
 # show_education saat ini hanya bertugas merender education.html tanpa memikirkan pengambilan data dari database
 # Karena sesuai instruksi, pengambilan data  json ini dilakukan oleh javascript melalui fetch dari database melalui endpoint json
-def show_experience(request): 
-    title_query = request.GET.get("title", "").strip() 
-
-    context = { 
-        "name": "Jordan Manaksak Hutahaean", 
-        "title_query" : title_query,
-        # Masukin form untuk kebutuhan Tambah Pengalaman
-        "form" : ExperienceForm(),
-    } 
-
-    return render(request, "experience.html", context) 
+def show_experience(request):
+    experiences = Experience.objects.all()
+    return render(request, 'experience.html', {'experiences': experiences})
  
 def get_experience_json(request): 
     title_query = request.GET.get("title", "").strip() 
@@ -260,14 +241,9 @@ def delete_education(request, id):
  
     return redirect("main:show_education") 
 
-def show_education(request): 
-    institution_query = request.GET.get("institution", "").strip() 
-    context = { 
-        "name": "Jordan Manaksak Hutahaean", 
-        "institution_query": institution_query,
-        "form" : EducationForm(),
-    } 
-    return render(request, "education.html", context) 
+def show_education(request):
+    educations = Education.objects.all()
+    return render(request, 'education.html', {'educations': educations})
  
 def get_education_json(request): 
     institution_query = request.GET.get("institution", "").strip() 
@@ -368,15 +344,9 @@ def delete_project(request, project_id):
  
     return redirect("main:show_projects") 
  
-def show_projects(request): 
-    title_query = request.GET.get("title", "").strip() 
- 
-    context = { 
-        "name": "Jordan Manaksak Hutahaean", 
-        "title_query": title_query, 
-        "form": ProjectForm(),
-    } 
-    return render(request, "project.html", context) 
+def show_projects(request):
+    projects = Project.objects.all()
+    return render(request, 'project.html', {'projects': projects})
  
 def get_projects_json(request): 
     title_query = request.GET.get("title", "").strip() 

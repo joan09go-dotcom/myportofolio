@@ -100,9 +100,10 @@ class EducationSerializer(serializers.ModelSerializer):
         read_only_fields = ["id"]
 
     def validate_institution(self, value):
-        value = strip_tags(value).strip()
-        if not value:
-            raise serializers.ValidationError("Institution cannot be empty.")
+        if not value.strip():
+            raise serializers.ValidationError("Field ini tidak boleh kosong.")
+        if "<script>" in value or "</script>" in value:
+            raise serializers.ValidationError("Input mengandung karakter berbahaya.")
         return value
 
     def validate_degree(self, value):

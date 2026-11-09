@@ -4,12 +4,11 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import (
     api_view, authentication_classes, permission_classes,
 )
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, SAFE_METHODS
 from rest_framework.response import Response
 
 from main.models import Project, Experience, Education
 from main.permissions import IsPortfolioOwnerOrEditorOrReadOnly
-from main.permissions import IsPortfolioOwnerOrReadOnly
 from main.serializers import ProjectSerializer, ExperienceSerializer, EducationSerializer
 
 # Project
@@ -32,18 +31,26 @@ def project_list(request):
     serializer.save()
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+
 @api_view(["GET", "HEAD", "PUT", "PATCH", "DELETE"])
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsPortfolioOwnerOrEditorOrReadOnly])
 def project_detail(request, project_id):
+    if request.method not in SAFE_METHODS:
+        if (request.user.is_staff or request.user.groups.filter(name="Editor").exists()) and not request.user.is_superuser:
+            return Response({"detail": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
+
     project = get_object_or_404(
         Project.objects.prefetch_related("starred_by"), pk=project_id,
     )
+
     if request.method in ("GET", "HEAD"):
         serializer = ProjectSerializer(project, context={"request": request})
         return Response(serializer.data)
 
     if request.method == "DELETE":
+        if not request.user.is_superuser:
+            return Response({"detail": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
         project.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -75,7 +82,6 @@ def project_star(request, project_id):
 def experience_list(request):
     if request.method in ("GET", "HEAD"):
         experiences = Experience.objects.prefetch_related("starred_by").all()
-        # Fitur pencarian berdasarkan judul experience
         title = request.query_params.get("title", "").strip()
         if title:
             experiences = experiences.filter(title__icontains=title)
@@ -85,7 +91,6 @@ def experience_list(request):
         )
         return Response(serializer.data)
 
-    # POST hanya untuk Superuser
     serializer = ExperienceSerializer(data=request.data, context={"request": request})
     serializer.is_valid(raise_exception=True)
     serializer.save()
@@ -105,10 +110,11 @@ def experience_detail(request, pk):
         return Response(serializer.data)
 
     if request.method == "DELETE":
+        if not request.user.is_superuser:
+            return Response({"detail": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
         experience.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    # PUT / PATCH untuk Editor & Superuser
     serializer = ExperienceSerializer(
         experience, data=request.data, partial=(request.method == "PATCH"),
         context={"request": request}
@@ -139,7 +145,6 @@ def experience_star(request, pk):
 def education_list(request):
     if request.method in ("GET", "HEAD"):
         educations = Education.objects.prefetch_related("starred_by").all()
-        # Fitur pencarian berdasarkan nama institusi 
         institution = request.query_params.get("institution", "").strip()
         if institution:
             educations = educations.filter(institution__icontains=institution)
@@ -149,7 +154,6 @@ def education_list(request):
         )
         return Response(serializer.data)
 
-    # POST hanya untuk Superuser
     serializer = EducationSerializer(data=request.data, context={"request": request})
     serializer.is_valid(raise_exception=True)
     serializer.save()
@@ -169,10 +173,11 @@ def education_detail(request, pk):
         return Response(serializer.data)
 
     if request.method == "DELETE":
+        if not request.user.is_superuser:
+            return Response({"detail": "You do not have permission to perform this action."}, status=status.HTTP_403_FORBIDDEN)
         education.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    # PUT / PATCH hanya untuk Editor & Superuser
     serializer = EducationSerializer(
         education, data=request.data, partial=(request.method == "PATCH"),
         context={"request": request}
